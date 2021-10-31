@@ -63,6 +63,16 @@ namespace GraineDeChourbe.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap graines {
+            get {
+                object obj = ResourceManager.GetObject("graines", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap pigeon_1 {
             get {
                 object obj = ResourceManager.GetObject("pigeon_1", resourceCulture);
