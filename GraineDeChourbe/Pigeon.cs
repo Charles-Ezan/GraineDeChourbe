@@ -8,6 +8,16 @@ namespace GraineDeChourbe
 {
     class Pigeon
     {
+        private int index;
+
+
+
+        Pigeon(int anIndex)
+        {
+            index = anIndex;
+        }
+
+
 
     }
 }

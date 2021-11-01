@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Environnement.cs" />
+    <Compile Include="Environment.cs" />
     <Compile Include="Graine.cs" />
     <Compile Include="Pigeon.cs" />
     <Compile Include="Form1.cs">

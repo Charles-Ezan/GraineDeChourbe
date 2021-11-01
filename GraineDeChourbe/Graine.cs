@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace GraineDeChourbe
 {
-    class Graine
+    public class Graine
     {
         private int xpos;
         private int ypos;
+        private bool rotten;
+
+        public Graine(int x, int y, bool isRotten)
+        {
+            xpos = x;
+            ypos = y;
+            rotten = isRotten;
+        }
 
         public int get_xpos()
         {
