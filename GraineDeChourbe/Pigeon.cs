@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,15 +15,29 @@ namespace GraineDeChourbe
         private (int, int) moveDirection;
         private string state;
         private int index;
+        public Image img;
 
-        public Pigeon()
+        public Pigeon(Image new_img)
         {
             xpos = 0;
             ypos = 0;
+            img = new_img;
             // Pixels/sec
             speed = 0;
             moveDirection = (0, 0);
             state = "sleep";
+        }
+
+        public Pigeon(int new_x, int new_y, int new_index, Image new_img)
+        {
+            xpos = new_x;
+            ypos = new_y;
+            index = new_index;
+            img = new_img;
+            // Pixels/sec
+            //speed = 0;
+            //moveDirection = (0, 0);
+            //state = "sleep";
         }
 
         public int get_xpos()
@@ -65,6 +80,7 @@ namespace GraineDeChourbe
             return state;
         }
 
+
         public void set_state(string new_state)
         {
             if(new_state == "sleep" || new_state == "food" || new_state == "random")
@@ -75,6 +91,16 @@ namespace GraineDeChourbe
             {
                 throw new ArgumentException("This pigeon state doesn't exist");
             }
+        }
+
+        public int get_index()
+        {
+            return index;
+        }
+
+        public void set_index(int new_index)
+        {
+            index = new_index;
         }
 
         public void sleep()

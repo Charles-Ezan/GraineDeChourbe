@@ -21,22 +21,27 @@ namespace GraineDeChourbe
         public void initialise()
         {
             Debug.WriteLine("INITIALISATION ! ");
+            for(int i=0; i<2 ; i++)
+            {
+                addPigeon(i * 50, i * 50, i, GraineDeChourbe.Properties.Resources.pigeon_1);
+            }
         }
 
         // Dessiner l'environnement initiale
 
         // Ajout de graines dans l'environnement
-        public void addPigeon(int newX, int newY, bool isRotten)
+        public void addSeed(int newX, int newY, bool isRotten)
         {
-            Graine newSeed = new Graine(newX, newY, isRotten);
-            graines.Add(newSeed);
+            //Graine newSeed = new Graine(newX, newY, isRotten);
+            //graines.Add(newSeed);
         }
 
         // Ajout de graines dans l'environnement
-        public void addSeed(int newX, int newY)
+        public void addPigeon(int newX, int newY, int newIndex, Image newImg)
         {
-            //Pigeon newPigeon = new Pigeon(newX, newY);
-            //pigeons.Add(newPigeon);
+
+            Pigeon newPigeon = new Pigeon(newX, newY, newIndex, newImg);
+            pigeons.Add(newPigeon);
         }
 
         // Mise à jour de l'affichage

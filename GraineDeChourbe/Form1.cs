@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 //using System;
 
 namespace GraineDeChourbe
@@ -24,9 +25,6 @@ namespace GraineDeChourbe
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            PictureBox pb1 = new PictureBox();
-            pb1.ImageLocation = "../SamuderaJayaMotor.png";
-            pb1.SizeMode = PictureBoxSizeMode.AutoSize;
         }
 
         private void launch_Click(object sender, EventArgs e)
@@ -34,24 +32,26 @@ namespace GraineDeChourbe
             Graphics graph = this.CreateGraphics();
             Pen BlackPen = new Pen(Color.Black, 3);
             graph.DrawRectangle(BlackPen, 1, 1, 700, 400);
-            launch.Enabled = false;
-        }
 
-        
-        private void start_Click(object sender, EventArgs e)
-        {
+
+            // Création de la grille visuelle
+
+
+            environment.initialise();
             List<Pigeon> pigeons = environment.pigeons;
             List<Tuple<Pigeon, PictureBox>> pigeonsAndImg = new List<Tuple<Pigeon, PictureBox>>();
+            Debug.WriteLine("Nombre de pigeons : " + pigeons.Count);
 
-            for(int i=0; i<pigeons.Count ; i++)
+            for (int i = 0; i < pigeons.Count; i++)
             {
-                PictureBox pb1 = new PictureBox();
-                pb1.ImageLocation = "./Ressources/pigeon_" + i.ToString() +".png";
-                pb1.SizeMode = PictureBoxSizeMode.AutoSize;
-                pb1.Location = new Point(pigeons[i].)
-                pigeonsAndImg.Add(Tuple.Create(pigeons[i],pb1))
+                Point a_position = new Point(pigeons[i].get_xpos(), pigeons[i].get_ypos());
+                graph.DrawImage(pigeons[i].img, a_position);
             }
-            environment.initialise();
+        }
+
+
+        private void start_Click(object sender, EventArgs e)
+        {
             environment.run();
         }
     }
