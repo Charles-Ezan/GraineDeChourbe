@@ -55,7 +55,7 @@ namespace GraineDeChourbe
             return (ypos, xpos);
         }
 
-        public float get_speed()
+        public int get_speed()
         {
             return speed;
         }
@@ -108,6 +108,7 @@ namespace GraineDeChourbe
             set_speed(0);
         }
 
+        // Changes the direction of the pigeon by directing it towards the food
         public void move_to_food()
         {
             Random random_speed = new Random();
@@ -129,22 +130,63 @@ namespace GraineDeChourbe
             set_direction(random_direction);
         }
 
-        // Calculates the distance traveled by the pigeon in a certain period of time 
-        private int distance_calculation(int delta_time)
+        // Calculates the distance the pigeon has to travel to reach its target
+        private int distance_target_calculation(int delta_time)
         {
             double direction_pow = Math.Pow(get_direction().Item1, 2) + Math.Pow(get_direction().Item2, 2);
-            double distance = (Math.Sqrt(direction_pow) * get_speed())/(1/delta_time);
+            double distance = (Math.Sqrt(direction_pow));
             return Convert.ToInt32(distance);
         }
 
         public (int, int) next_position(int delta_time)
         {
-            int distance = distance_calculation(delta_time);
+            // Distance between the position of the pigeon and the position of its target
+            int distance_target = distance_target_calculation(delta_time);
 
+            // Number of pixels covered during the time period
+            int pixel_delta_time = get_speed() * delta_time;
 
+            // Calculation of the ratio between the distance to the target and the distance the pigeon can travel during delta_time
+            double distance_ratio = distance_target / pixel_delta_time;
 
-            (int, int) new_position = (1, 2);
+            // Calculation of the travel vector
+            (int, int) travel_vector = (Convert.ToInt32(get_direction().Item1 / distance_ratio),
+                Convert.ToInt32(get_direction().Item2 / distance_ratio));
+
+            (int, int) new_position = (get_xpos() + travel_vector.Item1, get_ypos() + travel_vector.Item2);
+
             return new_position;
+        }
+
+        public (int, int) run(string new_state, int delta_time)
+        {
+            if(new_state == state && new_state != "food")
+            {
+                return next_position(delta_time);
+            }
+            
+            else if(new_state == "sleep")
+            {
+                sleep();
+                return next_position(delta_time);
+            }
+
+            else if(new_state == "food")
+            {
+                move_to_food();
+                return next_position(delta_time);
+            }
+
+            else if(new_state == "random")
+            {
+                move_random();
+                return next_position(delta_time);
+            }
+
+            else
+            {
+                throw new ArgumentException("Error in the state name");
+            }
         }
     }
 }
