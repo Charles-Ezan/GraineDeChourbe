@@ -134,7 +134,7 @@ namespace GraineDeChourbe
 
         public (int, int) run(string new_state, int delta_time)
         {
-            if(new_state == state)
+            if(new_state == state && new_state != "food")
             {
                 return next_position(delta_time);
             }
