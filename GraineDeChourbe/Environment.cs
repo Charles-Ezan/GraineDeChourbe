@@ -56,6 +56,12 @@ namespace GraineDeChourbe
         public void run()
         {
             Debug.WriteLine("RUN !");
+            // Faire bouger les pigeons
+            foreach (var pigeon in pigeons)
+            {
+                pigeon.xpos += 1;
+                pigeon.ypos += 1;
+            }
         }
     }
 }

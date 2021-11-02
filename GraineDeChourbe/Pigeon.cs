@@ -9,8 +9,8 @@ namespace GraineDeChourbe
 {
     class Pigeon
     {
-        private int xpos;
-        private int ypos;
+        public int xpos;
+        public int ypos;
         private int speed;
         private (int, int) moveDirection;
         private string state;
