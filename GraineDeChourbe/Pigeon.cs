@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace GraineDeChourbe
 {
@@ -35,9 +36,9 @@ namespace GraineDeChourbe
             index = new_index;
             img = new_img;
             // Pixels/sec
-            //speed = 0;
-            //moveDirection = (0, 0);
-            //state = "sleep";
+            speed = 0;
+            moveDirection = (0, 0);
+            state = "sleep";
         }
 
         public int get_xpos()
@@ -53,6 +54,12 @@ namespace GraineDeChourbe
         public (int, int) get_pos()
         {
             return (ypos, xpos);
+        }
+
+        public void set_position((int, int) new_pos)
+        {
+            xpos = new_pos.Item1;
+            ypos = new_pos.Item2;
         }
 
         public int get_speed()
@@ -125,62 +132,63 @@ namespace GraineDeChourbe
         public void move_random()
         {
             Random random_speed = new Random();
-            (int, int) random_direction = (new Random().Next(0, 10), new Random().Next(0, 10));
-            set_speed(random_speed.Next(15, 20));
+            Random random_first_direction = new Random();
+            Random random_second_direction = new Random();
+            (int, int) random_direction = (random_first_direction.Next(-10, 10), random_second_direction.Next(-10, 10));
+            set_speed(random_speed.Next(3, 5));
             set_direction(random_direction);
         }
 
         // Calculates the distance the pigeon has to travel to reach its target
-        private int distance_target_calculation(int delta_time)
+        private double distance_target_calculation(int delta_time)
         {
             double direction_pow = Math.Pow(get_direction().Item1, 2) + Math.Pow(get_direction().Item2, 2);
             double distance = (Math.Sqrt(direction_pow));
-            return Convert.ToInt32(distance);
+            return distance;
         }
 
         public (int, int) next_position(int delta_time)
         {
             // Distance between the position of the pigeon and the position of its target
-            int distance_target = distance_target_calculation(delta_time);
-
+            double distance_target = distance_target_calculation(delta_time);
             // Number of pixels covered during the time period
-            int pixel_delta_time = get_speed() * delta_time;
+            double pixel_delta_time = get_speed() * delta_time;
 
             // Calculation of the ratio between the distance to the target and the distance the pigeon can travel during delta_time
-            double distance_ratio = distance_target / pixel_delta_time;
+            double distance_ratio = Math.Ceiling(distance_target / pixel_delta_time);
 
-            // Calculation of the travel vector
-            (int, int) travel_vector = (Convert.ToInt32(get_direction().Item1 / distance_ratio),
-                Convert.ToInt32(get_direction().Item2 / distance_ratio));
+            // Calculation of the travel vector           
+            (double, double) travel_vector = (Math.Ceiling(get_direction().Item1 / distance_ratio),
+                Math.Ceiling(get_direction().Item2 / distance_ratio));
 
-            (int, int) new_position = (get_xpos() + travel_vector.Item1, get_ypos() + travel_vector.Item2);
+            (int, int) new_position = (get_xpos() + (int) Math.Ceiling(travel_vector.Item1), (int) Math.Ceiling(get_ypos() + travel_vector.Item2));
 
             return new_position;
         }
 
-        public (int, int) run(string new_state, int delta_time)
+        public void run(string new_state, int delta_time)
         {
             if(new_state == state && new_state != "food")
             {
-                return next_position(delta_time);
+                set_position(next_position(delta_time));
             }
             
             else if(new_state == "sleep")
             {
                 sleep();
-                return next_position(delta_time);
+                set_position(next_position(delta_time));
             }
 
             else if(new_state == "food")
             {
                 move_to_food();
-                return next_position(delta_time);
+                set_position(next_position(delta_time));
             }
 
             else if(new_state == "random")
             {
                 move_random();
-                return next_position(delta_time);
+                set_position(next_position(delta_time));
             }
 
             else
