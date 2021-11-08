@@ -21,9 +21,9 @@ namespace GraineDeChourbe
         public void initialise()
         {
             Debug.WriteLine("INITIALISATION ! ");
-            for(int i=0; i<2 ; i++)
+            for(int i=1; i<2 ; i++)
             {
-                addPigeon(i * 50, i * 50, i, GraineDeChourbe.Properties.Resources.pigeon_1);
+                addPigeon(i * 1, i * 1, i, GraineDeChourbe.Properties.Resources.pigeon_1);
             }
         }
 
@@ -59,8 +59,7 @@ namespace GraineDeChourbe
             // Faire bouger les pigeons
             foreach (var pigeon in pigeons)
             {
-                pigeon.xpos += 1;
-                pigeon.ypos += 1;
+                pigeon.run("food", 3);
             }
         }
     }
