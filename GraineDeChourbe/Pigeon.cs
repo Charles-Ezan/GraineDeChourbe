@@ -41,7 +41,7 @@ namespace GraineDeChourbe
             // Pixels/sec
             speed = 0;
             moveDirection = (0, 0);
-            desire = (200, 200);
+            desire = (200, 210);
             state = "sleep";
         }
 
@@ -57,7 +57,7 @@ namespace GraineDeChourbe
 
         public (int, int) get_pos()
         {
-            return (ypos, xpos);
+            return (xpos, ypos);
         }
 
         public void set_position((int, int) new_pos)
@@ -152,7 +152,7 @@ namespace GraineDeChourbe
             int x_seed = get_desire().Item1;
             int y_seed = get_desire().Item2;
 
-            (int, int) food_direction = (x_seed - get_pos().Item1, y_seed-get_pos().Item2);
+            (int, int) food_direction = (get_desire().Item1 - get_pos().Item1,  (get_desire().Item2 - get_pos().Item2));
             set_direction(food_direction);
         }
 
@@ -189,14 +189,11 @@ namespace GraineDeChourbe
                 distance_ratio = 1;
             }
 
-            // (double, double) travel_vector = (pixel_delta_time*x_direction_ratio, pixel_delta_time*y_direction_ratio);
-
             // calculation of the travel vector
             (double, double) travel_vector = ((get_direction().Item1 / distance_ratio),
                get_direction().Item2 / distance_ratio);
 
             (int, int) new_position = (get_xpos() + (int) (travel_vector.Item1), (int) (get_ypos() + travel_vector.Item2));
-            Debug.WriteLine(new_position);
 
             return new_position;
         }

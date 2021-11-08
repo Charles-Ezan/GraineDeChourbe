@@ -21,9 +21,9 @@ namespace GraineDeChourbe
         public void initialise()
         {
             Debug.WriteLine("INITIALISATION ! ");
-            for(int i=1; i<2 ; i++)
+            for(int i=0; i<5 ; i++)
             {
-                addPigeon(i * 1, i * 1, i, GraineDeChourbe.Properties.Resources.pigeon_1);
+                addPigeon(i * 100, i, i, GraineDeChourbe.Properties.Resources.pigeon_1);
             }
         }
 
