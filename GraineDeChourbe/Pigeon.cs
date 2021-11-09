@@ -16,7 +16,10 @@ namespace GraineDeChourbe
         private (int, int) moveDirection;
         private string state;
         private int index;
+        private (int, int) desire;
         public Image img;
+        public (int, int) windowSize;
+
 
         public Pigeon(Image new_img)
         {
@@ -38,6 +41,7 @@ namespace GraineDeChourbe
             // Pixels/sec
             speed = 0;
             moveDirection = (0, 0);
+            desire = (200, 210);
             state = "sleep";
         }
 
@@ -53,7 +57,7 @@ namespace GraineDeChourbe
 
         public (int, int) get_pos()
         {
-            return (ypos, xpos);
+            return (xpos, ypos);
         }
 
         public void set_position((int, int) new_pos)
@@ -87,6 +91,15 @@ namespace GraineDeChourbe
             return state;
         }
 
+        public (int, int) get_desire()
+        {
+            return desire;
+        }
+
+        public void set_desire((int, int) new_desire)
+        {
+            desire = new_desire;
+        }
 
         public void set_state(string new_state)
         {
@@ -110,6 +123,20 @@ namespace GraineDeChourbe
             index = new_index;
         }
 
+        // Limits the movement of the pigeon so that it does not leave the window
+        public bool window_limit()
+        {
+            bool is_at_the_limit = true;
+            (int, int) xlimit = (45, windowSize.Item1 - 45);
+            (int, int) ylimit = (35, windowSize.Item2 - 35);
+
+            //if(xlimit.Item1 < get_xpos() < xlimit.Item2)
+            //{
+
+            //}
+            return is_at_the_limit;
+        }
+
         public void sleep()
         {
             set_speed(0);
@@ -119,13 +146,13 @@ namespace GraineDeChourbe
         public void move_to_food()
         {
             Random random_speed = new Random();
-            set_speed(random_speed.Next(5, 10));
+            set_speed(random_speed.Next(4, 6));
             // Function to get the nearest seed
             // Return coordinates (x_seed, y_seed)
-            int x_seed = 10;
-            int y_seed = 5;
+            int x_seed = get_desire().Item1;
+            int y_seed = get_desire().Item2;
 
-            (int, int) food_direction = (get_pos().Item1 - x_seed, get_pos().Item2 - y_seed);
+            (int, int) food_direction = (get_desire().Item1 - get_pos().Item1,  (get_desire().Item2 - get_pos().Item2));
             set_direction(food_direction);
         }
 
@@ -140,9 +167,9 @@ namespace GraineDeChourbe
         }
 
         // Calculates the distance the pigeon has to travel to reach its target
-        private double distance_target_calculation(int delta_time)
+        private double distance_target_calculation()
         {
-            double direction_pow = Math.Pow(get_direction().Item1, 2) + Math.Pow(get_direction().Item2, 2);
+            double direction_pow = Math.Pow(get_desire().Item1 - get_pos().Item1, 2) + Math.Pow(get_desire().Item2 - get_pos().Item2, 2);
             double distance = (Math.Sqrt(direction_pow));
             return distance;
         }
@@ -150,30 +177,35 @@ namespace GraineDeChourbe
         public (int, int) next_position(int delta_time)
         {
             // Distance between the position of the pigeon and the position of its target
-            double distance_target = distance_target_calculation(delta_time);
+            double distance_target = distance_target_calculation();
             // Number of pixels covered during the time period
             double pixel_delta_time = get_speed() * delta_time;
 
             // Calculation of the ratio between the distance to the target and the distance the pigeon can travel during delta_time
-            double distance_ratio = Math.Ceiling(distance_target / pixel_delta_time);
+            double distance_ratio = distance_target / pixel_delta_time;
 
-            // Calculation of the travel vector           
-            (double, double) travel_vector = (Math.Ceiling(get_direction().Item1 / distance_ratio),
-                Math.Ceiling(get_direction().Item2 / distance_ratio));
+            if(distance_ratio < 1)
+            {
+                distance_ratio = 1;
+            }
 
-            (int, int) new_position = (get_xpos() + (int) Math.Ceiling(travel_vector.Item1), (int) Math.Ceiling(get_ypos() + travel_vector.Item2));
+            // calculation of the travel vector
+            (double, double) travel_vector = ((get_direction().Item1 / distance_ratio),
+               get_direction().Item2 / distance_ratio);
+
+            (int, int) new_position = (get_xpos() + (int) (travel_vector.Item1), (int) (get_ypos() + travel_vector.Item2));
 
             return new_position;
         }
 
         public void run(string new_state, int delta_time)
         {
-            if(new_state == state && new_state != "food")
-            {
-                set_position(next_position(delta_time));
-            }
+            //if(new_state == state && new_state != "food")
+            //{
+            //    set_position(next_position(delta_time));
+            //}
             
-            else if(new_state == "sleep")
+            if(new_state == "sleep")
             {
                 sleep();
                 set_position(next_position(delta_time));
