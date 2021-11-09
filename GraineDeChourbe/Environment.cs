@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 //using System.Windows.Forms;
 using System.Diagnostics;
+using thread = System.Threading;
+using System.Threading.Tasks;
 
 namespace GraineDeChourbe
 {
@@ -13,6 +15,8 @@ namespace GraineDeChourbe
     {
         public List<Pigeon> pigeons = new List<Pigeon>();
         public List<Graine> graines = new List<Graine>();
+
+        thread.Thread threadPigeon;
 
         int widthEnv = 10;
         int heightEnv = 10;
@@ -25,15 +29,20 @@ namespace GraineDeChourbe
             {
                 addPigeon(i * 50, i * 50, i, GraineDeChourbe.Properties.Resources.pigeon_1);
             }
+
+            // Lancement d'un thread pour un pigeon
+            threadPigeon = new thread.Thread(new thread.ThreadStart(run));
+            threadPigeon.Start();
         }
 
         // Dessiner l'environnement initiale
 
         // Ajout de graines dans l'environnement
-        public void addSeed(int newX, int newY, bool isRotten)
+        public void addSeed(int newX, int newY)
         {
-            //Graine newSeed = new Graine(newX, newY, isRotten);
-            //graines.Add(newSeed);
+
+            Graine newSeed = new Graine(newX, newY, false);
+            graines.Add(newSeed);
         }
 
         // Ajout de graines dans l'environnement
@@ -55,13 +64,17 @@ namespace GraineDeChourbe
         // Fais apparaitre des graines
         public void run()
         {
-            Debug.WriteLine("RUN !");
-            // Faire bouger les pigeons
+
             foreach (var pigeon in pigeons)
             {
                 pigeon.xpos += 1;
                 pigeon.ypos += 1;
             }
+        }
+
+        public void stopPigeon()
+        {
+            //pigeon_is_here = false;
         }
     }
 }

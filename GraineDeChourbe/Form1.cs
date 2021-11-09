@@ -9,45 +9,42 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 //using System;
+using thread = System.Threading;
+using System.Threading.Tasks;
 
 namespace GraineDeChourbe
 {
     public partial class Form1 : Form
     {
+
+        // Thread pour le refresh
+        thread.Thread threadRefresh;
+
         //Pigeon environment = new Pigeon();
 
         Environment environment = new Environment();
 
+        bool refreshDisplay = false;
+
         // Liste des pigeons associés à une image
         List<Tuple<int, PictureBox>> pigeonsAndImg = new List<Tuple<int, PictureBox>>();
 
-        Graphics graph;
+        // Liste des graines associés à une image
+        //List<Tuple<Tuple<int,int>, PictureBox>> seedsAndImg = new List<Tuple<Tuple<int,int>, PictureBox>>();
+        List<PictureBox> seedsImg = new List<PictureBox>();
 
-        // Creation d'un pictureBox qui va permettre d'afficher nos objets
-        //private PictureBox pigeon_1;
-        //    PictureBox pb1 = new PictureBox();
+        // Graph
+        Graphics graph;
 
         public Form1()
         {
             InitializeComponent();
-            //pigeon_1 = new PictureBox();
-            //pigeon_1.Image = (Image)GraineDeChourbe.Properties.Resources.pigeon_1;
-            //pigeon_1.Location = new Point(50, 50);
-            //pb1.ClientSize = new Size(20, 20);
-            //pigeon_1.SizeMode = PictureBoxSizeMode.Zoom;
-            //pb1.SizeMode = PictureBoxSizeMode.AutoSize;
-
+            // Lancement d'un thread pour un pigeon
+            threadRefresh = new thread.Thread(new thread.ThreadStart(refresh));
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //pigeon_1 = new PictureBox();
-            //pigeon_1.Image = (Image)GraineDeChourbe.Properties.Resources.pigeon_1;
-            //pigeon_1.Location = new Point(50, 50);
-            ////pb1.ClientSize = new Size(20, 20);
-            //pigeon_1.SizeMode = PictureBoxSizeMode.Zoom;
-            ////pb1.SizeMode = PictureBoxSizeMode.AutoSize;
-            //this.Controls.Add(pigeon_1);
         }
 
         private void launch_Click(object sender, EventArgs e)
@@ -56,13 +53,14 @@ namespace GraineDeChourbe
             Pen BlackPen = new Pen(Color.Black, 3);
             graph.DrawRectangle(BlackPen, 1, 1, 700, 400);
 
+            pictureBox1.SendToBack();//put it behinds
+
 
             // Création de la grille visuelle
 
 
             environment.initialise();
             List<Pigeon> pigeons = environment.pigeons;
-            //List<Tuple<Pigeon, PictureBox>> pigeonsAndImg = new List<Tuple<Pigeon, PictureBox>>();
             Debug.WriteLine("Nombre de pigeons : " + pigeons.Count);
 
             for (int i = 0; i < pigeons.Count; i++)
@@ -72,35 +70,73 @@ namespace GraineDeChourbe
                 int x = pigeons[i].xpos;
                 int y = pigeons[i].ypos;
                 a_pigeon.Location = new Point(x, y);
+
                 a_pigeon.SizeMode = PictureBoxSizeMode.Zoom;
-                pigeonsAndImg.Add(Tuple.Create(i,a_pigeon));
+                pigeonsAndImg.Add(Tuple.Create(i, a_pigeon));
                 this.Controls.Add(a_pigeon);
+                
+
             }
         }
 
         private void start_Click(object sender, EventArgs e)
         {
-            environment.run();
-            
-            refresh();
 
+            if (!threadRefresh.IsAlive)
+            {
+                refreshDisplay = true;
+                threadRefresh.Start();
+            }
         }
 
         private void refresh()
         {
+            // Mise à jour de la position des pigeons
             List<Pigeon> pigeons = environment.pigeons;
-            //List<Tuple<Pigeon, PictureBox>> pigeonsAndImg = new List<Tuple<Pigeon, PictureBox>>();
             Debug.WriteLine("Nombre de pigeons : " + pigeons.Count);
 
             for (int i = 0; i < pigeons.Count; i++)
             {
                 pigeonsAndImg[i].Item2.Location = new Point(pigeons[i].xpos, pigeons[i].ypos);
+                //pigeonsAndImg[i].Item2.BringToFront();
+                //pigeonsAndImg[i].Item2.BackColor = Color.Transparent;
             }
+
+            // Suppresion des graines manger
+
         }
 
         private void pause_Click(object sender, EventArgs e)
         {
+            refreshDisplay = false;
+        }
 
+        // Création d'une graine lors de l'appui 
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+            MouseEventArgs e1 = (MouseEventArgs)e;
+
+            int seedX = e1.Location.X;
+            int seedY = e1.Location.Y;
+
+            // Mise à jour du visuel
+            PictureBox a_seed = new PictureBox();
+            a_seed.Image = (Image)GraineDeChourbe.Properties.Resources.graines;
+            a_seed.SizeMode = PictureBoxSizeMode.Zoom;
+            a_seed.Location = new Point(seedX - a_seed.Size.Width/2, seedY - a_seed.Size.Height / 2);
+            this.Controls.Add(a_seed);
+            a_seed.BringToFront();
+
+            // seedsImg.Add()
+            this.environment.addSeed(seedX, seedY);
+            seedsImg.Add(a_seed);
+        }
+
+        private void moveButton_Click(object sender, EventArgs e)
+        {
+            environment.run();
+            refresh();
         }
     }
 }
