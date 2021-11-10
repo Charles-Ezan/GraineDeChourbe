@@ -127,11 +127,18 @@ namespace GraineDeChourbe
         // Limits the movement of the pigeon so that it does not leave the window
         public bool window_limit()
         {
-            bool is_at_the_limit = true;
-            (int, int) xlimit = (45, windowSize.Item1 - 45);
+            bool is_at_the_limit = false;
+            (int, int) xlimit = (100, windowSize.Item1 - 45);
             (int, int) ylimit = (35, windowSize.Item2 - 35);
 
-
+            if(xlimit.Item1 > get_xpos() || get_xpos() > xlimit.Item2)
+            {
+                is_at_the_limit = true;
+            }
+            if(ylimit.Item1 > get_ypos() || get_ypos() > ylimit.Item2)
+            {
+                is_at_the_limit = true;
+            }
 
             return is_at_the_limit;
         }
@@ -238,7 +245,10 @@ namespace GraineDeChourbe
             else if(new_state == "random")
             {
                 move_random();
-                set_position(next_position(delta_time));
+                if (window_limit() == false)
+                {
+                    set_position(next_position(delta_time));
+                }
             }
 
             else
