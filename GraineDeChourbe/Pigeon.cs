@@ -240,9 +240,12 @@ namespace GraineDeChourbe
 
         public void run(string new_state, int delta_time)
         {
-            find_neerest_seed();
+            if(get_belief().Count > 1)
+            {
+                find_neerest_seed();
+            }
 
-            if(get_belief().Count < 1)
+            if (get_belief().Count < 1)
             {
                 sleep();
                 set_position(next_position(delta_time));

@@ -26,12 +26,6 @@ namespace GraineDeChourbe
         // Créer les pigeons
         public void initialise()
         {
-            Debug.WriteLine("INITIALISATION ! ");
-            Graine seed1 = new Graine(100, 300, false);
-            Graine seed2 = new Graine(400, 300, false);
-            graines.Add(seed1);
-            graines.Add(seed2);
-
             for (int i=1; i<6 ; i++)
             {
                 addPigeon(i * 100, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
@@ -68,6 +62,7 @@ namespace GraineDeChourbe
 
             foreach (var pigeon in pigeons)
             {
+                pigeon.set_belief(graines);
                 pigeon.run("food", 3);
             }
         }
