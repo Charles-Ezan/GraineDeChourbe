@@ -16,6 +16,7 @@ namespace GraineDeChourbe
         private (int, int) moveDirection;
         private string state;
         private int index;
+        private List<Graine> belief;
         private (int, int) desire;
         public Image img;
         public (int, int) windowSize;
@@ -130,16 +131,30 @@ namespace GraineDeChourbe
             (int, int) xlimit = (45, windowSize.Item1 - 45);
             (int, int) ylimit = (35, windowSize.Item2 - 35);
 
-            //if(xlimit.Item1 < get_xpos() < xlimit.Item2)
-            //{
 
-            //}
+
             return is_at_the_limit;
         }
 
         public void sleep()
         {
             set_speed(0);
+        }
+
+        public void find_neerest_seed()
+        {
+            double shortest_distance = distance_seed_calculation(belief[0]);
+            (int, int) neerest_seed = belief[0].get_pos();
+            foreach(Graine seed in belief)
+            {
+                double seed_distance = distance_seed_calculation(seed);
+                if(seed_distance < shortest_distance)
+                {
+                    shortest_distance = seed_distance;
+                    neerest_seed = seed.get_pos();
+                }
+            }
+            set_desire(neerest_seed);
         }
 
         // Changes the direction of the pigeon by directing it towards the food
@@ -164,6 +179,12 @@ namespace GraineDeChourbe
             (int, int) random_direction = (random_first_direction.Next(-10, 10), random_second_direction.Next(-10, 10));
             set_speed(random_speed.Next(3, 5));
             set_direction(random_direction);
+        }
+
+        public double distance_seed_calculation(Graine seed)
+        {
+            double distance = Math.Sqrt(Math.Pow(seed.get_xpos() - get_xpos(), 2) + Math.Pow(seed.get_ypos() - get_ypos(), 2));
+            return distance;
         }
 
         // Calculates the distance the pigeon has to travel to reach its target
@@ -200,11 +221,8 @@ namespace GraineDeChourbe
 
         public void run(string new_state, int delta_time)
         {
-            //if(new_state == state && new_state != "food")
-            //{
-            //    set_position(next_position(delta_time));
-            //}
-            
+            find_neerest_seed();
+
             if(new_state == "sleep")
             {
                 sleep();
