@@ -34,6 +34,7 @@ namespace GraineDeChourbe
             this.pause = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.moveButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,7 +73,7 @@ namespace GraineDeChourbe
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(480, 278);
+            this.pictureBox1.Size = new System.Drawing.Size(646, 354);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -87,11 +88,22 @@ namespace GraineDeChourbe
             this.moveButton.UseVisualStyleBackColor = true;
             this.moveButton.Click += new System.EventHandler(this.moveButton_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(664, 163);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Delete";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.moveButton);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pause);
@@ -112,6 +124,7 @@ namespace GraineDeChourbe
         private System.Windows.Forms.Button pause;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button moveButton;
+        private System.Windows.Forms.Button button1;
     }
 }
 

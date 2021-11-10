@@ -13,6 +13,8 @@ namespace GraineDeChourbe
 {
     class Environment
     {
+        public EventHandler udpateSeeds;
+
         public List<Pigeon> pigeons = new List<Pigeon>();
         public List<Graine> graines = new List<Graine>();
 
@@ -53,12 +55,6 @@ namespace GraineDeChourbe
             pigeons.Add(newPigeon);
         }
 
-        // Mise à jour de l'affichage
-        public void refresh()
-        {
-
-        }
-
         // Run environment
         // fais vivre les pigeons
         // Fais apparaitre des graines
@@ -75,5 +71,24 @@ namespace GraineDeChourbe
         {
             //pigeon_is_here = false;
         }
+
+        // On supprime la graine qui a été mangée
+        public void deleteSeed(int seedX, int seedY)
+        {
+
+            if (udpateSeeds != null)
+                udpateSeeds(this, null);
+            //for(int i=0; i<graines.Count; i++)
+            //{
+            //    if((graines[i].get_xpos() == seedX) && (graines[i].get_ypos() == seedY))
+            //    {
+            //        graines.RemoveAt(i);
+            //        if (udpateSeeds != null)
+            //            udpateSeeds(this, null);
+            //    }
+            //}
+        }
+
+
     }
 }

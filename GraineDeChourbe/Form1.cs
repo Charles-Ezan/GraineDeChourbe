@@ -17,11 +17,18 @@ namespace GraineDeChourbe
     public partial class Form1 : Form
     {
 
+        private delegate void SafeCallDelegate();
+        public delegate void MyEventHandler();
+
+        //
+        public event MyEventHandler MyEvent;    
+
         // Thread pour le refresh
         thread.Thread threadRefresh;
 
-        //Pigeon environment = new Pigeon();
 
+
+        //Pigeon environment = new Pigeon();
         Environment environment = new Environment();
 
         bool refreshDisplay = false;
@@ -39,8 +46,10 @@ namespace GraineDeChourbe
         public Form1()
         {
             InitializeComponent();
-            // Lancement d'un thread pour un pigeon
-            threadRefresh = new thread.Thread(new thread.ThreadStart(refresh));
+
+            environment.udpateSeeds += deleteSeedImg;
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -49,6 +58,8 @@ namespace GraineDeChourbe
 
         private void launch_Click(object sender, EventArgs e)
         {
+
+
             graph = this.CreateGraphics();
             Pen BlackPen = new Pen(Color.Black, 3);
             graph.DrawRectangle(BlackPen, 1, 1, 700, 400);
@@ -74,9 +85,9 @@ namespace GraineDeChourbe
                 a_pigeon.SizeMode = PictureBoxSizeMode.Zoom;
                 pigeonsAndImg.Add(Tuple.Create(i, a_pigeon));
                 this.Controls.Add(a_pigeon);
-                
-
             }
+            // Lancement d'un thread pour un pigeon
+            threadRefresh = new thread.Thread(new thread.ThreadStart(refresh));
         }
 
         private void start_Click(object sender, EventArgs e)
@@ -91,19 +102,38 @@ namespace GraineDeChourbe
 
         private void refresh()
         {
-            // Mise à jour de la position des pigeons
+            while (refreshDisplay) {
+                move_item();
+                thread.Thread.Sleep(50);
+            }
+            // Suppresion des graines manger
+        }
+
+        public void remove_Seed()
+        {
+            MessageBox.Show("REMOVED SEED");
+        }
+
+        private void move_item()
+        {
             List<Pigeon> pigeons = environment.pigeons;
-            Debug.WriteLine("Nombre de pigeons : " + pigeons.Count);
+            
+            // Debug.WriteLine("Nombre de pigeons : " + pigeons.Count);
 
             for (int i = 0; i < pigeons.Count; i++)
             {
-                pigeonsAndImg[i].Item2.Location = new Point(pigeons[i].xpos, pigeons[i].ypos);
-                //pigeonsAndImg[i].Item2.BringToFront();
-                //pigeonsAndImg[i].Item2.BackColor = Color.Transparent;
+                if (pigeonsAndImg[i].Item2.InvokeRequired)
+                {
+                    var d = new SafeCallDelegate(move_item);
+                    pigeonsAndImg[i].Item2.Invoke(d, new object[] { });
+                }
+                else
+                {
+                    pigeonsAndImg[i].Item2.Location = new Point(pigeons[i].xpos, pigeons[i].ypos);
+                    pigeonsAndImg[i].Item2.BringToFront();
+                    pigeonsAndImg[i].Item2.BackColor = Color.Transparent;
+                }
             }
-
-            // Suppresion des graines manger
-
         }
 
         private void pause_Click(object sender, EventArgs e)
@@ -136,7 +166,22 @@ namespace GraineDeChourbe
         private void moveButton_Click(object sender, EventArgs e)
         {
             environment.run();
-            refresh();
+            // refresh();
+        }
+
+        private void deleteSeedImg(object sender, EventArgs e)
+        {
+            MessageBox.Show("SEED DELETED");
+        }
+
+        public void testdeleteSeed()
+        {
+            environment.deleteSeed(0,0);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            testdeleteSeed();
         }
     }
 }
