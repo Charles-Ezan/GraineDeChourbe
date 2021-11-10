@@ -103,6 +103,16 @@ namespace GraineDeChourbe
             desire = new_desire;
         }
 
+        public List<Graine> get_belief()
+        {
+            return belief;
+        }
+
+        public void set_belief(List<Graine> new_belief)
+        {
+            belief = new_belief;
+        }
+
         public void set_state(string new_state)
         {
             if(new_state == "sleep" || new_state == "food" || new_state == "random")
@@ -151,9 +161,10 @@ namespace GraineDeChourbe
 
         public void find_neerest_seed()
         {
-            double shortest_distance = distance_seed_calculation(belief[0]);
-            (int, int) neerest_seed = belief[0].get_pos();
-            foreach(Graine seed in belief)
+            List<Graine> seeds = get_belief();
+            double shortest_distance = distance_seed_calculation(seeds[0]);
+            (int, int) neerest_seed = seeds[0].get_pos();
+            foreach(Graine seed in seeds)
             {
                 double seed_distance = distance_seed_calculation(seed);
                 if(seed_distance < shortest_distance)
@@ -229,9 +240,9 @@ namespace GraineDeChourbe
 
         public void run(string new_state, int delta_time)
         {
-            // find_neerest_seed();
+            find_neerest_seed();
 
-            if(new_state == "sleep")
+            if(get_belief().Count < 1)
             {
                 sleep();
                 set_position(next_position(delta_time));
