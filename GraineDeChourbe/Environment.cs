@@ -27,9 +27,9 @@ namespace GraineDeChourbe
         public void initialise()
         {
             Debug.WriteLine("INITIALISATION ! ");
-            for(int i=0; i<5 ; i++)
+            for(int i=1; i<6 ; i++)
             {
-                addPigeon(i * 100, i, i, GraineDeChourbe.Properties.Resources.pigeon_1);
+                addPigeon(i * 100, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
             }
 
             // Lancement d'un thread pour un pigeon
@@ -63,7 +63,7 @@ namespace GraineDeChourbe
 
             foreach (var pigeon in pigeons)
             {
-                pigeon.run("food", 3);
+                pigeon.run("random", 3);
             }
         }
 
