@@ -164,13 +164,14 @@ namespace GraineDeChourbe
             List<Graine> seeds = get_belief();
             double shortest_distance = distance_seed_calculation(seeds[0]);
             (int, int) neerest_seed = seeds[0].get_pos();
-            foreach(Graine seed in seeds)
+            //foreach(Graine seed in seeds)
+            for(int i=0; i<seeds.Count ; i++ )
             {
-                double seed_distance = distance_seed_calculation(seed);
+                double seed_distance = distance_seed_calculation(seeds[i]);
                 if(seed_distance < shortest_distance)
                 {
                     shortest_distance = seed_distance;
-                    neerest_seed = seed.get_pos();
+                    neerest_seed = seeds[i].get_pos();
                 }
             }
             set_desire(neerest_seed);

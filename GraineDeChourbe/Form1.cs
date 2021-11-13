@@ -96,12 +96,20 @@ namespace GraineDeChourbe
 
         private void start_Click(object sender, EventArgs e)
         {
-
+            // Démarrage du thread de refresh
             if (!threadRefresh.IsAlive)
             {
                 refreshDisplay = true;
                 threadRefresh.Start();
             }
+            // Démarrage du thread du pigeon
+            if (!environment.pigeon_alive)
+            {
+                environment.pigeon_alive = true;
+                environment.threadPigeon.Start();
+            }
+
+
         }
 
         private void refresh()
@@ -177,7 +185,7 @@ namespace GraineDeChourbe
         
         private void deleteSeedImg(object sender, EventArgs e)
         {
-            MessageBox.Show(e.ToString());
+            MessageBox.Show("Message receive");
             List<Graine> seeds = environment.graines;
             for (int i=0; i <seeds.Count; i++)
             {
@@ -197,9 +205,9 @@ namespace GraineDeChourbe
         }
 
         // TEST
-        private void SavedHandler(object sender, SettingsSavedEventArgs ss)
-        {
-            int deviceIndex = ss.DeviceIndex.Item1;
-        }
+        //private void SavedHandler(object sender, SettingsSavedEventArgs ss)
+        //{
+        //    int deviceIndex = ss.DeviceIndex.Item1;
+        //}
     }
 }

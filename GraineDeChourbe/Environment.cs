@@ -21,7 +21,9 @@ namespace GraineDeChourbe
         public List<Pigeon> pigeons = new List<Pigeon>();
         public List<Graine> graines = new List<Graine>();
 
-        thread.Thread threadPigeon;
+
+        public bool pigeon_alive = false;
+        public thread.Thread threadPigeon;
 
         int widthEnv = 10;
         int heightEnv = 10;
@@ -29,15 +31,20 @@ namespace GraineDeChourbe
         // Créer les pigeons
         public void initialise()
         {
-            for (int i=1; i<6 ; i++)
-            {
-                addPigeon(i * 100, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
-                pigeons[i - 1].set_belief(graines);
-            }
+
+            // Test pour 1 pigeon
+            addPigeon(100, 70, 0, GraineDeChourbe.Properties.Resources.pigeon_1);
+            pigeons[0].set_belief(graines);
+
+            //for (int i=1; i<6 ; i++)
+            //{
+            //    addPigeon(i * 100, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
+            //    pigeons[i - 1].set_belief(graines);
+            //}
 
             // Lancement d'un thread pour un pigeon
             threadPigeon = new thread.Thread(new thread.ThreadStart(run));
-            threadPigeon.Start();
+            //threadPigeon.Start();
         }
 
         // Dessiner l'environnement initiale
@@ -62,12 +69,22 @@ namespace GraineDeChourbe
         // Fais apparaitre des graines
         public void run()
         {
+            while (pigeon_alive) {
+                // Test pour 1 seul pigeon
+                pigeons[0].set_belief(graines);
 
-            foreach (var pigeon in pigeons)
-            {
-                pigeon.set_belief(graines);
-                pigeon.run("food", 3);
+                // Should send coordinate
+                pigeons[0].run("food", 3);
+
+                // Destroy from the list the seed
+
             }
+
+            //foreach (var pigeon in pigeons)
+            //{
+            //    pigeon.set_belief(graines);
+            //    pigeon.run("food", 3);
+            //}
         }
 
         public void stopPigeon()
@@ -79,8 +96,8 @@ namespace GraineDeChourbe
         public void deleteSeed(int seedX, int seedY)
         {
 
-            if (udpateSeeds != null)
-                udpateSeeds(this, null);
+            //if (udpateSeeds != null)
+            //    udpateSeeds(this, null);
             for (int i = 0; i < graines.Count; i++)
             {
                 if ((graines[i].get_xpos() == seedX) && (graines[i].get_ypos() == seedY))
