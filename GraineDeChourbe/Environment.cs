@@ -72,9 +72,17 @@ namespace GraineDeChourbe
             while (pigeon_alive) {
                 // Test pour 1 seul pigeon
                 pigeons[0].set_belief(graines);
-
+                (int, int) pos_seed_eat = pigeons[0].run("food", 3);
                 // Should send coordinate
-                pigeons[0].run("food", 3);
+                if (pos_seed_eat == (-1, -1))
+                {
+                    continue;
+                }
+                else
+                {
+                    deleteSeed(pos_seed_eat.Item1, pos_seed_eat.Item2);
+                }
+                thread.Thread.Sleep(50);
 
                 // Destroy from the list the seed
 
