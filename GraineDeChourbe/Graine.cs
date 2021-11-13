@@ -31,7 +31,7 @@ namespace GraineDeChourbe
 
         public (int, int) get_pos()
         {
-            return (ypos, xpos);
+            return (xpos, ypos);
         }
     }
 }

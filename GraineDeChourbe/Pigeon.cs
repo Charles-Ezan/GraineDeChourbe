@@ -44,6 +44,7 @@ namespace GraineDeChourbe
             moveDirection = (0, 0);
             desire = (200, 210);
             state = "sleep";
+            windowSize = (646, 354);
         }
 
         public int get_xpos()
@@ -102,6 +103,16 @@ namespace GraineDeChourbe
             desire = new_desire;
         }
 
+        public List<Graine> get_belief()
+        {
+            return belief;
+        }
+
+        public void set_belief(List<Graine> new_belief)
+        {
+            belief = new_belief;
+        }
+
         public void set_state(string new_state)
         {
             if(new_state == "sleep" || new_state == "food" || new_state == "random")
@@ -128,7 +139,7 @@ namespace GraineDeChourbe
         public bool window_limit()
         {
             bool is_at_the_limit = false;
-            (int, int) xlimit = (100, windowSize.Item1 - 45);
+            (int, int) xlimit = (45, windowSize.Item1 - 45);
             (int, int) ylimit = (35, windowSize.Item2 - 35);
 
             if(xlimit.Item1 > get_xpos() || get_xpos() > xlimit.Item2)
@@ -150,9 +161,10 @@ namespace GraineDeChourbe
 
         public void find_neerest_seed()
         {
-            double shortest_distance = distance_seed_calculation(belief[0]);
-            (int, int) neerest_seed = belief[0].get_pos();
-            foreach(Graine seed in belief)
+            List<Graine> seeds = get_belief();
+            double shortest_distance = distance_seed_calculation(seeds[0]);
+            (int, int) neerest_seed = seeds[0].get_pos();
+            foreach(Graine seed in seeds)
             {
                 double seed_distance = distance_seed_calculation(seed);
                 if(seed_distance < shortest_distance)
@@ -183,8 +195,8 @@ namespace GraineDeChourbe
             Random random_speed = new Random();
             Random random_first_direction = new Random();
             Random random_second_direction = new Random();
-            (int, int) random_direction = (random_first_direction.Next(-10, 10), random_second_direction.Next(-10, 10));
-            set_speed(random_speed.Next(3, 5));
+            (int, int) random_direction = (random_first_direction.Next(-100, 100), random_second_direction.Next(-100, 100));
+            set_speed(random_speed.Next(7, 10));
             set_direction(random_direction);
         }
 
@@ -228,9 +240,12 @@ namespace GraineDeChourbe
 
         public void run(string new_state, int delta_time)
         {
-            find_neerest_seed();
+            if(get_belief().Count > 1)
+            {
+                find_neerest_seed();
+            }
 
-            if(new_state == "sleep")
+            if (get_belief().Count < 1)
             {
                 sleep();
                 set_position(next_position(delta_time));
