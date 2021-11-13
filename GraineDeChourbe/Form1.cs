@@ -20,6 +20,7 @@ namespace GraineDeChourbe
         private delegate void SafeCallDelegate();
         public delegate void MyEventHandler();
 
+
         //
         public event MyEventHandler MyEvent;    
 
@@ -35,7 +36,7 @@ namespace GraineDeChourbe
 
         // Liste des pigeons associés à une image
         List<Tuple<int, PictureBox>> pigeonsAndImg = new List<Tuple<int, PictureBox>>();
-
+        List<PictureBox> seedImg = new List<PictureBox>();
         // Liste des graines associés à une image
         //List<Tuple<Tuple<int,int>, PictureBox>> seedsAndImg = new List<Tuple<Tuple<int,int>, PictureBox>>();
         List<PictureBox> seedsImg = new List<PictureBox>();
@@ -48,6 +49,9 @@ namespace GraineDeChourbe
             InitializeComponent();
 
             environment.udpateSeeds += deleteSeedImg;
+
+
+            // environment.udpateSeeds += new SettingsSavedEventHandler(SavedHandler);
 
 
         }
@@ -157,6 +161,7 @@ namespace GraineDeChourbe
             a_seed.Location = new Point(seedX - a_seed.Size.Width/2, seedY - a_seed.Size.Height / 2);
             this.Controls.Add(a_seed);
             a_seed.BringToFront();
+            seedImg.Add(a_seed);
 
             // seedsImg.Add()
             this.environment.addSeed(seedX, seedY);
@@ -169,19 +174,32 @@ namespace GraineDeChourbe
             // refresh();
         }
 
+        
         private void deleteSeedImg(object sender, EventArgs e)
         {
-            MessageBox.Show("SEED DELETED");
-        }
-
-        public void testdeleteSeed()
-        {
-            environment.deleteSeed(0,0);
+            MessageBox.Show(e.ToString());
+            List<Graine> seeds = environment.graines;
+            for (int i=0; i <seeds.Count; i++)
+            {
+                for (int j = 0; j < seedsImg.Count; j++)
+                {
+                    if ((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())) {
+                        continue;
+                    }
+                    seedsImg[j].Dispose();
+                }
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            testdeleteSeed();
+            environment.deleteSeed(20, 20);
+        }
+
+        // TEST
+        private void SavedHandler(object sender, SettingsSavedEventArgs ss)
+        {
+            int deviceIndex = ss.DeviceIndex.Item1;
         }
     }
 }

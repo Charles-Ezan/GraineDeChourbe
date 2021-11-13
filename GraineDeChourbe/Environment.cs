@@ -15,6 +15,9 @@ namespace GraineDeChourbe
     {
         public EventHandler udpateSeeds;
 
+        public delegate void SettingsSavedEventHandler(object sender, SettingsSavedEventArgs e);
+        public event SettingsSavedEventHandler SettingsSaved;
+
         public List<Pigeon> pigeons = new List<Pigeon>();
         public List<Graine> graines = new List<Graine>();
 
@@ -78,17 +81,29 @@ namespace GraineDeChourbe
 
             if (udpateSeeds != null)
                 udpateSeeds(this, null);
-            //for(int i=0; i<graines.Count; i++)
-            //{
-            //    if((graines[i].get_xpos() == seedX) && (graines[i].get_ypos() == seedY))
-            //    {
-            //        graines.RemoveAt(i);
-            //        if (udpateSeeds != null)
-            //            udpateSeeds(this, null);
-            //    }
-            //}
+            for (int i = 0; i < graines.Count; i++)
+            {
+                if ((graines[i].get_xpos() == seedX) && (graines[i].get_ypos() == seedY))
+                {
+                    graines.RemoveAt(i);
+                    if (udpateSeeds != null)
+                    {
+                        udpateSeeds(this, null);
+                    }
+                    //if (SettingsSaved != null)
+                    //{
+                    //    SettingsSavedEventArgs ss = new SettingsSavedEventArgs() { DeviceIndex = Tuple.Create(seedX,seedY) };
+                    //    SettingsSaved(this, ss);
+                    //}
+                }
+            }
         }
+    }
 
-
+    // TEST
+    public class SettingsSavedEventArgs : EventArgs
+    {
+        public Tuple<int,int> DeviceIndex { get; set; }
+        // Other settings could be added here
     }
 }
