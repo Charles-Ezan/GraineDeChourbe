@@ -7,12 +7,16 @@ using System.Threading.Tasks;
 //using System.Windows.Forms;
 using System.Diagnostics;
 using thread = System.Threading;
+using Mutex = System.Threading.Mutex;
 using System.Threading.Tasks;
 
 namespace GraineDeChourbe
 {
     class Environment
     {
+        // Création du Mutex
+        private static Mutex mutex = new Mutex();
+
         public EventHandler udpateSeeds;
 
         public delegate void SettingsSavedEventHandler(object sender, SettingsSavedEventArgs e);
@@ -73,10 +77,12 @@ namespace GraineDeChourbe
                 // Test pour 1 seul pigeon
                 pigeons[0].set_belief(graines);
 
-                // Should send coordinate
+                // Should return coordinate
                 pigeons[0].run("food", 3);
 
                 // Destroy from the list the seed
+                // ISSUE IN SEEDS
+                // deleteSeed()
 
             }
 
@@ -93,11 +99,11 @@ namespace GraineDeChourbe
         }
 
         // On supprime la graine qui a été mangée
-        public void deleteSeed(int seedX, int seedY)
+        public static void deleteSeed(int seedX, int seedY)
         {
 
             //if (udpateSeeds != null)
-            //    udpateSeeds(this, null);
+            //    udpateSeeds(this, null); 
             for (int i = 0; i < graines.Count; i++)
             {
                 if ((graines[i].get_xpos() == seedX) && (graines[i].get_ypos() == seedY))
@@ -114,6 +120,24 @@ namespace GraineDeChourbe
                     //}
                 }
             }
+        }
+
+        static void CriticalZone(int seedX, int seedY)
+        {
+            Console.WriteLine(thread.Thread.CurrentThread.Name + "Pigeon want to eat");
+            try
+            {
+                // On attend avant d'accéder à la liste de graines que celle-ci soit libre
+                mutex.WaitOne();
+                deleteSeed(seedX, seedY);
+                Console.WriteLine(thread.Thread.CurrentThread.Name + "as completed is task");
+            }
+            finally
+            {
+                // Libère la liste de graines de tel sorte à ce que les pigeons puissent y accéder
+                mutex.ReleaseMutex();
+            }
+
         }
     }
 
