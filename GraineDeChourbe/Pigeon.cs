@@ -42,7 +42,6 @@ namespace GraineDeChourbe
             // Pixels/sec
             speed = 0;
             moveDirection = (0, 0);
-            desire = (200, 210);
             state = "sleep";
             windowSize = (646, 354);
         }
@@ -239,8 +238,20 @@ namespace GraineDeChourbe
             return new_position;
         }
 
-        public void run(string new_state, int delta_time)
+        public (int, int) eat()
         {
+            (int, int) pos_seed_eat = (-1, -1);
+            if(get_pos() == get_desire())
+            {
+                pos_seed_eat = get_desire();
+            }
+            return pos_seed_eat;
+        }
+
+        public (int, int) run(string new_state, int delta_time)
+        {
+            (int, int) eat_seed_position = (-1, -1);
+
             if(get_belief().Count > 1)
             {
                 find_neerest_seed();
@@ -256,6 +267,7 @@ namespace GraineDeChourbe
             {
                 move_to_food();
                 set_position(next_position(delta_time));
+                eat_seed_position = eat();
             }
 
             else if(new_state == "random")
@@ -271,6 +283,8 @@ namespace GraineDeChourbe
             {
                 throw new ArgumentException("Error in the state name");
             }
+
+            return eat_seed_position;
         }
     }
 }
