@@ -265,6 +265,7 @@ namespace GraineDeChourbe
 
             else if(new_state == "food")
             {
+                //find_neerest_seed();
                 move_to_food();
                 set_position(next_position(delta_time));
                 eat_seed_position = eat();

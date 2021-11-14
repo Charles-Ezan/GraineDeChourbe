@@ -18,6 +18,7 @@ namespace GraineDeChourbe
     {
 
         private delegate void SafeCallDelegate();
+        private delegate void SafeCallDelegate2();
         public delegate void MyEventHandler();
 
 
@@ -149,7 +150,7 @@ namespace GraineDeChourbe
         }
 
         private void pause_Click(object sender, EventArgs e)
-        {
+        {   
             refreshDisplay = false;
         }
 
@@ -166,13 +167,17 @@ namespace GraineDeChourbe
             PictureBox a_seed = new PictureBox();
             a_seed.Image = (Image)GraineDeChourbe.Properties.Resources.graines;
             a_seed.SizeMode = PictureBoxSizeMode.Zoom;
-            a_seed.Location = new Point(seedX - a_seed.Size.Width/2, seedY - a_seed.Size.Height / 2);
+            var newSeedX = seedX - a_seed.Size.Width / 2;
+            var newSeedY = seedY - a_seed.Size.Width / 2;
+            a_seed.Location = new Point(newSeedX, newSeedY);
+            //a_seed.Location = new Point(seedX - a_seed.Size.Width/2, seedY - a_seed.Size.Height / 2);
+
             this.Controls.Add(a_seed);
             a_seed.BringToFront();
             seedImg.Add(a_seed);
 
             // seedsImg.Add()
-            this.environment.addSeed(seedX, seedY);
+            this.environment.addSeed(a_seed.Location.X, a_seed.Location.Y);
             seedsImg.Add(a_seed);
         }
 
@@ -182,24 +187,71 @@ namespace GraineDeChourbe
             // refresh();
         }
 
-        
+
         private void deleteSeedImg(object sender, EventArgs e)
         {
-            MessageBox.Show("Message receive");
+            //MessageBox.Show("Message receive");
+            //List<Graine> seeds = environment.graines;
+            //for (int i = 0; i < seeds.Count; i++)
+            //{
+            //    for (int j = 0; j < seedsImg.Count; j++)
+            //    {
+            //        if ((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos()))
+            //        {
+            //            continue;
+            //        }
+            //            seedsImg[j].Dispose();
+            //    }
+            //}
+            //deleteFromIndex();
+        }
+        public void deleteFromIndex()
+        {
+            //MessageBox.Show("Message receive");
             List<Graine> seeds = environment.graines;
-            for (int i=0; i <seeds.Count; i++)
+            for (int i = 0; i < seeds.Count; i++)
             {
                 for (int j = 0; j < seedsImg.Count; j++)
                 {
-                    if ((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())) {
+                    if(seedsImg[j].Visible == false)
+                    {
                         continue;
                     }
-                    seedsImg[j].Dispose();
+                    Console.WriteLine("seedsImg[j] -> X : " + seedsImg[j].Location.X + " Y : " + seedsImg[j].Location.Y);
+                    Console.WriteLine("seeds[i] -> X : " + seeds[i].get_xpos() + " Y : " + seeds[i].get_ypos());
+                    if (((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())))
+                    {
+                        continue;
+                    }
+                    if (seedsImg[j].InvokeRequired)
+                    {
+                        SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
+                        pigeonsAndImg[j].Item2.Invoke(s, new object[] { });
+                    }
+                    else {
+                        seedsImg[j].Visible = false;
+                        Console.WriteLine("seedsImg : " + seedsImg.Count);
+                        Console.WriteLine("j : " + j);
+                        Console.WriteLine("i : " + i);
+                    }
+                    return;
                 }
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+            //if (pigeonsAndImg[i].Item2.InvokeRequired)
+            //{
+            //    var d = new SafeCallDelegate(move_item);
+            //    pigeonsAndImg[i].Item2.Invoke(d, new object[] { });
+            //}
+            //else
+            //{
+            //    pigeonsAndImg[i].Item2.Location = new Point(pigeons[i].xpos, pigeons[i].ypos);
+            //    pigeonsAndImg[i].Item2.BringToFront();
+            //    pigeonsAndImg[i].Item2.BackColor = Color.Transparent;
+            //}
+
+            private void button1_Click(object sender, EventArgs e)
         {
             environment.deleteSeed(20, 20);
         }

@@ -38,6 +38,7 @@ namespace GraineDeChourbe
 
             // Test pour 1 pigeon
             addPigeon(100, 70, 0, GraineDeChourbe.Properties.Resources.pigeon_1);
+            addPigeon(200, 100, 0, GraineDeChourbe.Properties.Resources.pigeon_2);
             pigeons[0].set_belief(graines);
 
             //for (int i=1; i<6 ; i++)
@@ -47,7 +48,11 @@ namespace GraineDeChourbe
             //}
 
             // Lancement d'un thread pour un pigeon
-            threadPigeon = new thread.Thread(new thread.ThreadStart(run));
+            foreach(var pigeon in pigeons)
+            {
+                threadPigeon = new thread.Thread(new thread.ThreadStart(run));
+            }
+            //threadPigeon = new thread.Thread(new thread.ThreadStart(run));
             //threadPigeon.Start();
         }
 
@@ -84,7 +89,9 @@ namespace GraineDeChourbe
                 }
                 else
                 {
-                    deleteSeed(pos_seed_eat.Item1, pos_seed_eat.Item2);
+                    //Console.WriteLine("pos_seed_eat : " + pos_seed_eat.Item1 + " " + pos_seed_eat.Item2);
+                    CriticalZone(pos_seed_eat.Item1, pos_seed_eat.Item2);
+                    //deleteSeed(pos_seed_eat.Item1, pos_seed_eat.Item2);
                 }
                 thread.Thread.Sleep(50);
 
@@ -107,7 +114,7 @@ namespace GraineDeChourbe
         }
 
         // On supprime la graine qui a été mangée
-        public static void deleteSeed(int seedX, int seedY)
+        public void deleteSeed(int seedX, int seedY)
         {
 
             //if (udpateSeeds != null)
@@ -130,15 +137,15 @@ namespace GraineDeChourbe
             }
         }
 
-        static void CriticalZone(int seedX, int seedY)
+        void CriticalZone(int seedX, int seedY)
         {
-            Console.WriteLine(thread.Thread.CurrentThread.Name + "Pigeon want to eat");
+            //Console.WriteLine(thread.Thread.CurrentThread.Name + "Pigeon want to eat");
             try
             {
                 // On attend avant d'accéder à la liste de graines que celle-ci soit libre
                 mutex.WaitOne();
                 deleteSeed(seedX, seedY);
-                Console.WriteLine(thread.Thread.CurrentThread.Name + "as completed is task");
+                //Console.WriteLine(thread.Thread.CurrentThread.Name + "as completed is task");
             }
             finally
             {
