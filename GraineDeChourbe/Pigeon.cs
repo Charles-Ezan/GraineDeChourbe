@@ -180,13 +180,16 @@ namespace GraineDeChourbe
 
         public void find_freshest_seed()
         {
-            for(int i = get_belief().Count; i != 0; i--)
+            List<Graine> seeds = get_belief();
+            (int, int) freshest_seed = seeds[0].get_pos();
+            for (int i = 0; i < seeds.Count; i++)
             {
-                if(get_belief()[i-1].get_status() == false)
+                if (seeds[i].get_status() == false)
                 {
-                    set_desire(get_belief()[i-1].get_pos());
+                    freshest_seed = seeds[i].get_pos();
                 }
             }
+            set_desire(freshest_seed);
         }
 
         // Changes the direction of the pigeon by directing it towards the food
