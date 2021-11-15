@@ -46,17 +46,19 @@ namespace GraineDeChourbe
         public void initialise()
         {
 
-            // Test pour 1 pigeon
-            addPigeon(100, 70, 0, GraineDeChourbe.Properties.Resources.pigeon_1);
-            addPigeon(200, 100, 0, GraineDeChourbe.Properties.Resources.pigeon_2);
-            pigeons[0].set_belief(graines);
+            //// Test pour 1 pigeon
+            //addPigeon(100, 70, 0, GraineDeChourbe.Properties.Resources.pigeon_1);
+            //addPigeon(200, 100, 0, GraineDeChourbe.Properties.Resources.pigeon_2);
+            //pigeons[0].set_belief(graines);
 
-            //for (int i=1; i<6 ; i++)
-            //{
-            //    addPigeon(i * 100, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
-            //    pigeons[i - 1].set_belief(graines);
-            //}
+            for (int i = 1; i < 6; i++)
+            {
+                addPigeon(i * 100, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
+                pigeons[i - 1].set_belief(graines);
+            }
 
+            // Lancement d'un thread pour un pigeon
+            foreach (var pigeon in pigeons)
             // Initialisation des pigeons
             threadPigeon1 = new thread.Thread(() => {
                 run(pigeons[0]);
@@ -107,23 +109,31 @@ namespace GraineDeChourbe
         public void run(Pigeon pigeon)
         {
             while (pigeon_alive) {
-                // Test pour 1 seul pigeon
-                //Console.WriteLine("Pigeon Position : " + pigeon.get_pos());
-                pigeon.set_belief(graines);
-                (int, int) pos_seed_eat = pigeon.run("food", 3);
-                // Should send coordinate
-                if (pos_seed_eat == (-1, -1))
-                {
-                    continue;
-                }
-                else
-                {
-                    //Console.WriteLine("pos_seed_eat : " + pos_seed_eat.Item1 + " " + pos_seed_eat.Item2);
-                    CriticalZone(pos_seed_eat.Item1, pos_seed_eat.Item2);
-                    //deleteSeed(pos_seed_eat.Item1, pos_seed_eat.Item2);
-                }
-                thread.Thread.Sleep(300);
 
+                thread.Thread.Sleep(50);
+                for (int i = 0; i < 5; i++)
+                {
+                    pigeons[i].set_belief(graines);
+                    string pigeon_status = "sleep";
+                    if (graines.Count > 0)
+                    {
+                        pigeon_status = "food";
+                    }
+
+                    (int, int) pos_seed_eat = pigeons[i].run(pigeon_status, 3);
+
+                    // Should send coordinate
+                    if (pos_seed_eat == (-1, -1))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        //Console.WriteLine("pos_seed_eat : " + pos_seed_eat.Item1 + " " + pos_seed_eat.Item2);
+                        CriticalZone(pos_seed_eat.Item1, pos_seed_eat.Item2);
+                        //deleteSeed(pos_seed_eat.Item1, pos_seed_eat.Item2);
+                    }
+                }
                 // Destroy from the list the seed
                 // ISSUE IN SEEDS
                 // deleteSeed()

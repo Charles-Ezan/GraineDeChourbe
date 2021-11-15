@@ -86,6 +86,7 @@ namespace GraineDeChourbe
                 int x = pigeons[i].xpos;
                 int y = pigeons[i].ypos;
                 a_pigeon.Location = new Point(x, y);
+                a_pigeon.BackColor = Color.Khaki;
 
                 a_pigeon.SizeMode = PictureBoxSizeMode.Zoom;
                 pigeonsAndImg.Add(Tuple.Create(i, a_pigeon));

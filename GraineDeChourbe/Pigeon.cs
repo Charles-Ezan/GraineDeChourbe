@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using thread = System.Threading;
 using System.Diagnostics;
 
 namespace GraineDeChourbe
@@ -177,11 +178,22 @@ namespace GraineDeChourbe
             set_desire(neerest_seed);
         }
 
+        public void find_freshest_seed()
+        {
+            for(int i = get_belief().Count; i != 0; i--)
+            {
+                if(get_belief()[i].get_status() == false)
+                {
+                    set_desire(get_belief()[i].get_pos());
+                }
+            }
+        }
+
         // Changes the direction of the pigeon by directing it towards the food
         public void move_to_food()
         {
             Random random_speed = new Random();
-            set_speed(random_speed.Next(4, 6));
+            set_speed(random_speed.Next(1, 2));
             // Function to get the nearest seed
             // Return coordinates (x_seed, y_seed)
             int x_seed = get_desire().Item1;
@@ -237,10 +249,17 @@ namespace GraineDeChourbe
             }
             (double, double) travel_vector = ((get_direction().Item1 / distance_ratio),
                get_direction().Item2 / distance_ratio);
+            if(distance_target == 0)
+            {
+                (int, int) new_position = get_pos();
+                return new_position;
+            }
+            else
+            {
+                (int, int) new_position = (get_xpos() + Convert.ToInt32(travel_vector.Item1), (get_ypos() + Convert.ToInt32(travel_vector.Item2)));
+                return new_position;
+            }
 
-            (int, int) new_position = (get_xpos() + (int) (travel_vector.Item1), (int) (get_ypos() + travel_vector.Item2));
-
-            return new_position;
         }
 
         public (int, int) eat()
@@ -257,7 +276,7 @@ namespace GraineDeChourbe
         {
             (int, int) eat_seed_position = (-1, -1);
 
-            if (get_belief().Count < 1)
+            if (new_state == "sleep")
             {
                 sleep();
                 set_position(next_position(delta_time));
@@ -284,7 +303,6 @@ namespace GraineDeChourbe
             {
                 throw new ArgumentException("Error in the state name");
             }
-
             return eat_seed_position;
         }
     }

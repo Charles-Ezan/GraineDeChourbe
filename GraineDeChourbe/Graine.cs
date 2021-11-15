@@ -36,6 +36,9 @@ namespace GraineDeChourbe
             return (xpos, ypos);
         }
 
-        public int get_index() { return index; }
+        public bool get_status()
+        {
+            return rotten;
+        }
     }
 }
