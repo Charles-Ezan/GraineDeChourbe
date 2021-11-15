@@ -21,6 +21,8 @@ namespace GraineDeChourbe
         private delegate void SafeCallDelegate2();
         public delegate void MyEventHandler();
 
+        private Tuple<int, int> seedToBeDelete; 
+
 
         //
         public event MyEventHandler MyEvent;    
@@ -49,7 +51,8 @@ namespace GraineDeChourbe
         {
             InitializeComponent();
 
-            environment.udpateSeeds += deleteSeedImg;
+            //environment.udpateSeeds += deleteSeedImg;
+            environment.UpdateEventHandler += deleteSeedImg;
 
 
             // environment.udpateSeeds += new SettingsSavedEventHandler(SavedHandler);
@@ -119,7 +122,7 @@ namespace GraineDeChourbe
         {
             while (refreshDisplay) {
                 move_item();
-                thread.Thread.Sleep(500);
+                thread.Thread.Sleep(50);
             }
             // Suppresion des graines manger
         }
@@ -190,81 +193,22 @@ namespace GraineDeChourbe
         }
 
 
-        private void deleteSeedImg(object sender, EventArgs e)
+        private void deleteSeedImg(object sender, Environment.UpdateEventArgs e)
         {
-            //MessageBox.Show("Message receive");
-            //List<Graine> seeds = environment.graines;
-            //for (int i = 0; i < seeds.Count; i++)
-            //{
-            //    for (int j = 0; j < seedsImg.Count; j++)
-            //    {
-            //        if ((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos()))
-            //        {
-            //            continue;
-            //        }
-            //            seedsImg[j].Dispose();
-            //    }
-            //}
+            
+            //MessageBox.Show("Message receive : " + e.y);
+            seedToBeDelete = Tuple.Create(e.x, e.y);
             deleteFromIndex();
         }
-        //public void deleteFromIndex()
-        //{
-        //    //MessageBox.Show("Message receive");
-        //    List<Graine> seeds = environment.graines;
 
-        //    for (int i = 0; i < seeds.Count; i++)
-        //    {
-        //        for (int j = 0; j < seedsImg.Count; j++)
-        //        {
-        //            //if(seedsImg[j].Visible == false)
-        //            //{
-        //            //    continue;
-        //            //}
-        //            //Console.WriteLine("seedsImg[j] -> X : " + seedsImg[j].Location.X + " Y : " + seedsImg[j].Location.Y);
-        //            //Console.WriteLine("seeds[i] -> X : " + seeds[i].get_xpos() + " Y : " + seeds[i].get_ypos());
-        //            if (((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())))
-        //            {
-        //                continue;
-        //            }
-
-        //            seedsImg[j].Hide();
-        //            if (seedsImg[j].InvokeRequired)
-        //            {
-        //                SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
-        //                pigeonsAndImg[j].Item2.Invoke(s, new object[] { });
-        //            }
-        //            else {
-        //                seedsImg[j].Visible = false;
-        //            }
-        //            return;
-        //        }
-        //    }
-        //}
 
         public void deleteFromIndex()
         {
-            //int lastSeedIndex = environment.deletedSeedIndex;
-            //int indexToHide = lastSeedIndex - 1;
-            ////seedsImg[indexToHide].Hide();
-
-            //if (seedsImg[indexToHide].InvokeRequired)
-            //{
-            //    SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
-            //    seedsImg[indexToHide].Invoke(s, new object[] { });
-            //}
-            //else
-            //{
-            //    //seedsImg[indexToHide].Hide();
-            //    seedsImg[indexToHide].Dispose();
-            //    //seedsImg[indexToHide].Visible = false;
-            //}
-
-            //MessageBox.Show("Message receive");
-            List<Graine> seeds = environment.graines;
             Console.WriteLine("11");
             for (int i = 0; i < seedsImg.Count; i++)
             {
-                if(seeds.Count == 0) {
+                //if (((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())))
+                    if ((seedsImg[i].Location.X == seedToBeDelete.Item1) && (seedsImg[i].Location.Y == seedToBeDelete.Item2))
                     if (seedsImg[i].InvokeRequired)
                     {
                         SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
@@ -272,62 +216,15 @@ namespace GraineDeChourbe
                     }
                     else
                     {
-                        Console.WriteLine("HIDE : " + i);
-                        seedsImg[i].Hide();
+                        seedsImg[i].Dispose();
                     }
                 }
-                Console.WriteLine("22");
-                for (int j = 0; j < seeds.Count; j++)
-                {
-                    //if(seedsImg[j].Visible == false)
-                    //{
-                    //    continue;
-                    //}
-                    //Console.WriteLine("seedsImg[j] -> X : " + seedsImg[j].Location.X + " Y : " + seedsImg[j].Location.Y);
-                    //Console.WriteLine("seeds[i] -> X : " + seeds[i].get_xpos() + " Y : " + seeds[i].get_ypos());
-                    if (((seedsImg[i].Location.X == seeds[j].get_xpos()) && ((seedsImg[i].Location.Y == seeds[j].get_ypos()))))
-                    {
-                        continue;
-                    }
-
-                    
-                    if (seedsImg[i].InvokeRequired)
-                    {
-                        SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
-                        seedsImg[i].Invoke(s, new object[] { });
-                    }
-                    else
-                    {
-                        Console.WriteLine("HIDE : " + i);
-                        seedsImg[i].Hide();
-                        //seedsImg[j].Visible = false;
-                    }
-                    return;
-                }
-            }
+               
         }
-
-        //if (pigeonsAndImg[i].Item2.InvokeRequired)
-        //{
-        //    var d = new SafeCallDelegate(move_item);
-        //    pigeonsAndImg[i].Item2.Invoke(d, new object[] { });
-        //}
-        //else
-        //{
-        //    pigeonsAndImg[i].Item2.Location = new Point(pigeons[i].xpos, pigeons[i].ypos);
-        //    pigeonsAndImg[i].Item2.BringToFront();
-        //    pigeonsAndImg[i].Item2.BackColor = Color.Transparent;
-        //}
 
         private void button1_Click(object sender, EventArgs e)
         {
             environment.deleteSeed(20, 20);
         }
-
-        // TEST
-        //private void SavedHandler(object sender, SettingsSavedEventArgs ss)
-        //{
-        //    int deviceIndex = ss.DeviceIndex.Item1;
-        //}
     }
 }

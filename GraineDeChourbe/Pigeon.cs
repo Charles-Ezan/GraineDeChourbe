@@ -182,9 +182,9 @@ namespace GraineDeChourbe
         {
             for(int i = get_belief().Count; i != 0; i--)
             {
-                if(get_belief()[i].get_status() == false)
+                if(get_belief()[i-1].get_status() == false)
                 {
-                    set_desire(get_belief()[i].get_pos());
+                    set_desire(get_belief()[i-1].get_pos());
                 }
             }
         }
@@ -193,7 +193,7 @@ namespace GraineDeChourbe
         public void move_to_food()
         {
             Random random_speed = new Random();
-            set_speed(random_speed.Next(1, 2));
+            set_speed(random_speed.Next(1, 10));
             // Function to get the nearest seed
             // Return coordinates (x_seed, y_seed)
             int x_seed = get_desire().Item1;
@@ -284,7 +284,7 @@ namespace GraineDeChourbe
 
             else if(new_state == "food")
             {
-                find_neerest_seed();
+                find_freshest_seed();
                 move_to_food();
                 set_position(next_position(delta_time));
                 eat_seed_position = eat();

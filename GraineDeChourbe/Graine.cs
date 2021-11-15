@@ -21,6 +21,8 @@ namespace GraineDeChourbe
             index = newIndex;
         }
 
+        public int get_index() { return index; }
+
         public int get_xpos()
         {
             return xpos;
