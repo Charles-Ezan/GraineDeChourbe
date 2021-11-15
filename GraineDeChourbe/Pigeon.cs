@@ -178,6 +178,17 @@ namespace GraineDeChourbe
             set_desire(neerest_seed);
         }
 
+        public void find_freshest_seed()
+        {
+            for(int i = get_belief().Count; i != 0; i--)
+            {
+                if(get_belief()[i].get_status() == false)
+                {
+                    set_desire(get_belief()[i].get_pos());
+                }
+            }
+        }
+
         // Changes the direction of the pigeon by directing it towards the food
         public void move_to_food()
         {
@@ -265,11 +276,7 @@ namespace GraineDeChourbe
         {
             (int, int) eat_seed_position = (-1, -1);
 
-<<<<<<< HEAD
             if (new_state == "sleep")
-=======
-            if (get_belief().Count < 1)
->>>>>>> dc76e90c8fbda8c84c5d368126dfb11abc0e5c20
             {
                 sleep();
                 set_position(next_position(delta_time));

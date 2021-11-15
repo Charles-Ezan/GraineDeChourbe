@@ -33,5 +33,10 @@ namespace GraineDeChourbe
         {
             return (xpos, ypos);
         }
+
+        public bool get_status()
+        {
+            return rotten;
+        }
     }
 }
