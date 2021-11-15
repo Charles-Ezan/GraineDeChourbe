@@ -11,6 +11,7 @@ namespace GraineDeChourbe
 {
     class Pigeon
     {
+        public bool alive = false;
         public int xpos;
         public int ypos;
         private int speed;
@@ -231,6 +232,10 @@ namespace GraineDeChourbe
             }
 
             // calculation of the travel vector
+            if(get_belief().Count < 1)
+            {
+                return get_pos();
+            }
             (double, double) travel_vector = ((get_direction().Item1 / distance_ratio),
                get_direction().Item2 / distance_ratio);
             if(distance_target == 0)
@@ -260,7 +265,11 @@ namespace GraineDeChourbe
         {
             (int, int) eat_seed_position = (-1, -1);
 
+<<<<<<< HEAD
             if (new_state == "sleep")
+=======
+            if (get_belief().Count < 1)
+>>>>>>> dc76e90c8fbda8c84c5d368126dfb11abc0e5c20
             {
                 sleep();
                 set_position(next_position(delta_time));

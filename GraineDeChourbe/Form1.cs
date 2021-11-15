@@ -108,7 +108,8 @@ namespace GraineDeChourbe
             if (!environment.pigeon_alive)
             {
                 environment.pigeon_alive = true;
-                environment.threadPigeon.Start();
+                environment.threadPigeon1.Start();
+                environment.threadPigeon2.Start();
             }
 
 
@@ -184,7 +185,7 @@ namespace GraineDeChourbe
 
         private void moveButton_Click(object sender, EventArgs e)
         {
-            environment.run();
+            //environment.run();
             // refresh();
         }
 

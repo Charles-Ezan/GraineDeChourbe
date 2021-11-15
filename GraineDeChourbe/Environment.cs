@@ -17,6 +17,9 @@ namespace GraineDeChourbe
         // Création du Mutex
         private static Mutex mutex = new Mutex();
 
+        // Liste de thread
+
+
         public EventHandler udpateSeeds;
 
         public delegate void SettingsSavedEventHandler(object sender, SettingsSavedEventArgs e);
@@ -27,7 +30,9 @@ namespace GraineDeChourbe
 
 
         public bool pigeon_alive = false;
-        public thread.Thread threadPigeon;
+        //public thread.Thread threadPigeon;
+        public thread.Thread threadPigeon1;
+        public thread.Thread threadPigeon2;
 
         int widthEnv = 10;
         int heightEnv = 10;
@@ -47,11 +52,32 @@ namespace GraineDeChourbe
                 pigeons[i - 1].set_belief(graines);
             }
 
+<<<<<<< HEAD
             // Lancement d'un thread pour un pigeon
             foreach (var pigeon in pigeons)
+=======
+            // Initialisation des pigeons
+            threadPigeon1 = new thread.Thread(() => {
+                run(pigeons[0]);
+            });
+
+            threadPigeon2 = new thread.Thread(() =>
+>>>>>>> dc76e90c8fbda8c84c5d368126dfb11abc0e5c20
             {
-                threadPigeon = new thread.Thread(new thread.ThreadStart(run));
-            }
+                run(pigeons[1]);
+            });
+
+            //threadPigeon.Start();
+
+
+            // Lancement d'un thread pour un pigeon
+            //foreach(var pigeon in pigeons)
+            //{
+            //    thread.Thread threadPigeon1 = new thread.Thread(()=> {
+            //        run(pigeon);
+            //    });
+            //    threadPigeon.Start();
+            //}
             //threadPigeon = new thread.Thread(new thread.ThreadStart(run));
             //threadPigeon.Start();
         }
@@ -76,9 +102,26 @@ namespace GraineDeChourbe
         // Run environment
         // fais vivre les pigeons
         // Fais apparaitre des graines
-        public void run()
+        public void run(Pigeon pigeon)
         {
             while (pigeon_alive) {
+<<<<<<< HEAD
+=======
+                // Test pour 1 seul pigeon
+                pigeon.set_belief(graines);
+                (int, int) pos_seed_eat = pigeon.run("food", 3);
+                // Should send coordinate
+                if (pos_seed_eat == (-1, -1))
+                {
+                    continue;
+                }
+                else
+                {
+                    //Console.WriteLine("pos_seed_eat : " + pos_seed_eat.Item1 + " " + pos_seed_eat.Item2);
+                    CriticalZone(pos_seed_eat.Item1, pos_seed_eat.Item2);
+                    //deleteSeed(pos_seed_eat.Item1, pos_seed_eat.Item2);
+                }
+>>>>>>> dc76e90c8fbda8c84c5d368126dfb11abc0e5c20
                 thread.Thread.Sleep(50);
                 for (int i = 0; i < 5; i++)
                 {
