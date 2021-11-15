@@ -121,6 +121,9 @@
   <data name="graines" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Ressources\graines.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="graines_rotten" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Ressources\graines_rotten.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="pigeon_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Ressources\pigeon_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

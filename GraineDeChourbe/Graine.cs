@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+
 
 namespace GraineDeChourbe
 {
@@ -10,15 +12,16 @@ namespace GraineDeChourbe
     {
         private int xpos;
         private int ypos;
-        private bool rotten;
+        private bool status;
         private int index;
-
-        public Graine(int x, int y, bool isRotten, int newIndex)
+        private int expiration_date;
+        public Graine(int x, int y, int newIndex)
         {
             xpos = x;
             ypos = y;
-            rotten = isRotten;
+            status = false;
             index = newIndex;
+            expiration_date = 100;
         }
 
         public int get_index() { return index; }
@@ -40,7 +43,28 @@ namespace GraineDeChourbe
 
         public bool get_status()
         {
-            return rotten;
+            return status;
+        }
+
+        public void set_status(bool new_status)
+        {
+            status = new_status;
+        }
+
+        public void update_seed_expiration()
+        {
+            expiration_date -= 1;
+            Debug.WriteLine(expiration_date);
+            Debug.WriteLine(get_status());
+            if(expiration_date < 0)
+            {
+                set_status(true);
+            }
+        }
+
+        public int get_expiration()
+        {
+            return expiration_date;
         }
     }
 }

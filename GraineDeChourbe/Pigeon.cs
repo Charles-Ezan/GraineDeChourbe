@@ -181,15 +181,17 @@ namespace GraineDeChourbe
         public void find_freshest_seed()
         {
             List<Graine> seeds = get_belief();
-            (int, int) freshest_seed = seeds[0].get_pos();
             for (int i = 0; i < seeds.Count; i++)
             {
                 if (seeds[i].get_status() == false)
                 {
-                    freshest_seed = seeds[i].get_pos();
+                    set_desire(seeds[i].get_pos());
+                }
+                else if(seeds.Count == 1)
+                {
+                    set_desire(get_pos());
                 }
             }
-            set_desire(freshest_seed);
         }
 
         // Changes the direction of the pigeon by directing it towards the food
@@ -197,10 +199,6 @@ namespace GraineDeChourbe
         {
             Random random_speed = new Random();
             set_speed(random_speed.Next(1, 10));
-            // Function to get the nearest seed
-            // Return coordinates (x_seed, y_seed)
-            int x_seed = get_desire().Item1;
-            int y_seed = get_desire().Item2;
 
             (int, int) food_direction = (get_desire().Item1 - get_pos().Item1,  (get_desire().Item2 - get_pos().Item2));
             set_direction(food_direction);
