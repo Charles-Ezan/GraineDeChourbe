@@ -24,6 +24,7 @@ namespace GraineDeChourbe
 
         public delegate void UpdateDelegate(object sender, UpdateEventArgs args);
         public event UpdateDelegate UpdateEventHandler;
+        public event UpdateDelegate ReplaceSeedEvent;
 
         public class UpdateEventArgs : EventArgs
         {
@@ -109,7 +110,7 @@ namespace GraineDeChourbe
         {
             lastSeedIndex = +1;
 
-            Graine newSeed = new Graine(newX, newY, false,lastSeedIndex);
+            Graine newSeed = new Graine(newX, newY,lastSeedIndex);
             graines.Add(newSeed);
         }
 
@@ -158,7 +159,18 @@ namespace GraineDeChourbe
         {
             while (pigeon_alive)
             {
-
+                for (int i = 0; i < graines.Count; i++)
+                {
+                    if (graines[i].get_status() == false)
+                    { 
+                        graines[i].update_seed_expiration(); 
+                    }
+                    else if (graines[i].get_status() == true)
+                    {
+                        UpdateEventArgs args = new UpdateEventArgs(graines[i].get_xpos(), graines[i].get_ypos());
+                        ReplaceSeedEvent.Invoke(this, args);
+                    }
+                }
                 thread.Thread.Sleep(50);
                 pigeon.set_belief(graines);
                 string pigeon_status = "sleep";
@@ -166,7 +178,7 @@ namespace GraineDeChourbe
                 {
                     pigeon_status = "food";
                 }
-
+             
                 (int, int) pos_seed_eat = pigeon.run(pigeon_status, 3);
 
                 // Should send coordinate

@@ -21,7 +21,9 @@ namespace GraineDeChourbe
         private delegate void SafeCallDelegate2();
         public delegate void MyEventHandler();
 
-        private Tuple<int, int> seedToBeDelete; 
+        private Tuple<int, int> seedToBeDelete;
+        private Tuple<int, int> seedToBeReplace;
+
 
 
         //
@@ -53,6 +55,8 @@ namespace GraineDeChourbe
 
             //environment.udpateSeeds += deleteSeedImg;
             environment.UpdateEventHandler += deleteSeedImg;
+            environment.ReplaceSeedEvent += rottenSeedImg;
+
 
 
             // environment.udpateSeeds += new SettingsSavedEventHandler(SavedHandler);
@@ -201,10 +205,32 @@ namespace GraineDeChourbe
             deleteFromIndex();
         }
 
+        private void rottenSeedImg(object sender, Environment.UpdateEventArgs e)
+        {
+            seedToBeReplace = Tuple.Create(e.x, e.y);
+            replaceFromIndex();
+        }
+
+        public void replaceFromIndex()
+        {
+            for (int i=0; i<seedsImg.Count; i++)
+            {
+                if ((seedsImg[i].Location.X == seedToBeReplace.Item1) && (seedsImg[i].Location.Y == seedToBeReplace.Item2))
+                    if (seedsImg[i].InvokeRequired)
+                    {
+                        SafeCallDelegate2 s = new SafeCallDelegate2(replaceFromIndex);
+                        seedsImg[i].Invoke(s, new object[] { });
+                    }
+                    else
+                    {
+                        seedsImg[i].Image=(Image)GraineDeChourbe.Properties.Resources.graines_rotten;
+                    }
+            }
+        }
+
 
         public void deleteFromIndex()
         {
-            Console.WriteLine("11");
             for (int i = 0; i < seedsImg.Count; i++)
             {
                 //if (((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())))
