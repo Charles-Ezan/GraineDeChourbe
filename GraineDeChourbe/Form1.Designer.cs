@@ -30,11 +30,8 @@ namespace GraineDeChourbe
         private void InitializeComponent()
         {
             this.launch = new System.Windows.Forms.Button();
-            this.start = new System.Windows.Forms.Button();
             this.pause = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.moveButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,16 +44,6 @@ namespace GraineDeChourbe
             this.launch.Text = "launch";
             this.launch.UseVisualStyleBackColor = true;
             this.launch.Click += new System.EventHandler(this.launch_Click);
-            // 
-            // start
-            // 
-            this.start.Location = new System.Drawing.Point(664, 76);
-            this.start.Name = "start";
-            this.start.Size = new System.Drawing.Size(75, 23);
-            this.start.TabIndex = 1;
-            this.start.Text = "Start";
-            this.start.UseVisualStyleBackColor = true;
-            this.start.Click += new System.EventHandler(this.start_Click);
             // 
             // pause
             // 
@@ -78,36 +65,13 @@ namespace GraineDeChourbe
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // moveButton
-            // 
-            this.moveButton.Location = new System.Drawing.Point(664, 134);
-            this.moveButton.Name = "moveButton";
-            this.moveButton.Size = new System.Drawing.Size(75, 23);
-            this.moveButton.TabIndex = 4;
-            this.moveButton.Text = "Move";
-            this.moveButton.UseVisualStyleBackColor = true;
-            this.moveButton.Click += new System.EventHandler(this.moveButton_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(664, 163);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Delete";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.moveButton);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pause);
-            this.Controls.Add(this.start);
             this.Controls.Add(this.launch);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -120,11 +84,9 @@ namespace GraineDeChourbe
         #endregion
 
         private System.Windows.Forms.Button launch;
-        private System.Windows.Forms.Button start;
+        //private System.Windows.Forms.Button start;
         private System.Windows.Forms.Button pause;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button moveButton;
-        private System.Windows.Forms.Button button1;
     }
 }
 

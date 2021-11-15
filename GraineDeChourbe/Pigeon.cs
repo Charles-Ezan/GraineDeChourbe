@@ -230,7 +230,7 @@ namespace GraineDeChourbe
             return distance;
         }
 
-        public (int, int) next_position(int delta_time)
+        public (int, int) next_position(int delta_time, String new_state)
         {
             // Distance between the position of the pigeon and the position of its target
             double distance_target = distance_target_calculation();
@@ -246,10 +246,11 @@ namespace GraineDeChourbe
             }
 
             // calculation of the travel vector
-            if(get_belief().Count < 1)
+            if((get_belief().Count < 1) && (new_state == "food"))
             {
                 return get_pos();
             }
+
             (double, double) travel_vector = ((get_direction().Item1 / distance_ratio),
                get_direction().Item2 / distance_ratio);
             if(distance_target == 0)
@@ -282,14 +283,14 @@ namespace GraineDeChourbe
             if (new_state == "sleep")
             {
                 sleep();
-                set_position(next_position(delta_time));
+                set_position(next_position(delta_time, new_state));
             }
 
             else if(new_state == "food")
             {
                 find_freshest_seed();
                 move_to_food();
-                set_position(next_position(delta_time));
+                set_position(next_position(delta_time,new_state));
                 eat_seed_position = eat();
             }
 
@@ -298,7 +299,7 @@ namespace GraineDeChourbe
                 move_random();
                 if (window_limit() == false)
                 {
-                    set_position(next_position(delta_time));
+                    set_position(next_position(delta_time, new_state));
                 }
             }
 

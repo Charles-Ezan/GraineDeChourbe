@@ -97,9 +97,10 @@ namespace GraineDeChourbe
             }
             // Lancement d'un thread pour un pigeon
             threadRefresh = new thread.Thread(new thread.ThreadStart(refresh));
+            start();
         }
 
-        private void start_Click(object sender, EventArgs e)
+        private void start()
         {
             // Démarrage du thread de refresh
             if (!threadRefresh.IsAlive)
@@ -113,10 +114,28 @@ namespace GraineDeChourbe
                 environment.pigeon_alive = true;
                 environment.threadPigeon1.Start();
                 environment.threadPigeon2.Start();
+                environment.threadPigeon3.Start();
             }
-
-
         }
+
+
+        //private void start_Click(object sender, EventArgs e)
+        //{
+        //    // Démarrage du thread de refresh
+        //    if (!threadRefresh.IsAlive)
+        //    {
+        //        refreshDisplay = true;
+        //        threadRefresh.Start();
+        //    }
+        //    // Démarrage du thread du pigeon
+        //    if (!environment.pigeon_alive)
+        //    {
+        //        environment.pigeon_alive = true;
+        //        environment.threadPigeon1.Start();
+        //        environment.threadPigeon2.Start();
+        //        environment.threadPigeon3.Start();
+        //    }
+        //}
 
         private void refresh()
         {
@@ -162,28 +181,45 @@ namespace GraineDeChourbe
         // Création d'une graine lors de l'appui 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
+            Random random = new Random();
+            int num = random.Next(100);
 
-            MouseEventArgs e1 = (MouseEventArgs)e;
+            bool fear = false;
+            if (num > 80)
+            {
+                fear = true;
+            }
+            environment.fearedPigeon = true;
+            Console.WriteLine("move : " + fear);
+            if(!fear) { 
 
-            int seedX = e1.Location.X;
-            int seedY = e1.Location.Y;
+                MouseEventArgs e1 = (MouseEventArgs)e;
 
-            // Mise à jour du visuel
-            PictureBox a_seed = new PictureBox();
-            a_seed.Image = (Image)GraineDeChourbe.Properties.Resources.graines;
-            a_seed.SizeMode = PictureBoxSizeMode.Zoom;
-            var newSeedX = seedX - a_seed.Size.Width / 2;
-            var newSeedY = seedY - a_seed.Size.Width / 2;
-            a_seed.Location = new Point(newSeedX, newSeedY);
-            //a_seed.Location = new Point(seedX - a_seed.Size.Width/2, seedY - a_seed.Size.Height / 2);
+                int seedX = e1.Location.X;
+                int seedY = e1.Location.Y;
 
-            this.Controls.Add(a_seed);
-            a_seed.BringToFront();
-            seedImg.Add(a_seed);
+                // Mise à jour du visuel
+                PictureBox a_seed = new PictureBox();
+                a_seed.Image = (Image)GraineDeChourbe.Properties.Resources.graines;
+                a_seed.SizeMode = PictureBoxSizeMode.Zoom;
+                var newSeedX = seedX - a_seed.Size.Width / 2;
+                var newSeedY = seedY - a_seed.Size.Width / 2;
+                a_seed.Location = new Point(newSeedX, newSeedY);
+                //a_seed.Location = new Point(seedX - a_seed.Size.Width/2, seedY - a_seed.Size.Height / 2);
 
-            // seedsImg.Add()
-            this.environment.addSeed(a_seed.Location.X, a_seed.Location.Y);
-            seedsImg.Add(a_seed);
+                this.Controls.Add(a_seed);
+                a_seed.BringToFront();
+                seedImg.Add(a_seed);
+
+                // seedsImg.Add()
+                this.environment.addSeed(a_seed.Location.X, a_seed.Location.Y);
+                seedsImg.Add(a_seed);
+                environment.fearedPigeon = false;
+            }
+            else
+            {
+                environment.fearedPigeon = true;
+            }
         }
 
         private void moveButton_Click(object sender, EventArgs e)

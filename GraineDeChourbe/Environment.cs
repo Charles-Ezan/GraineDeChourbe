@@ -17,7 +17,9 @@ namespace GraineDeChourbe
         // Création du Mutex
         private static Mutex mutex = new Mutex();
 
-        // Liste de thread
+        // Timed feared pigeon when there is no seed on map
+        System.Windows.Forms.Timer fearTime = new System.Windows.Forms.Timer();
+        public bool fearedPigeon = false;
 
         // Handler
         public EventHandler udpateSeeds;
@@ -25,16 +27,7 @@ namespace GraineDeChourbe
         public delegate void UpdateDelegate(object sender, UpdateEventArgs args);
         public event UpdateDelegate UpdateEventHandler;
 
-        public class UpdateEventArgs : EventArgs
-        {
-            public int x;
-            public int y;
-            public UpdateEventArgs(int new_x, int new_y)
-            {
-                x = new_x;
-                y = new_y;
-            }
-        }
+
 
 
         //public delegate void SettingsSavedEventHandler(object sender, SettingsSavedEventArgs e);
@@ -50,9 +43,11 @@ namespace GraineDeChourbe
 
 
         public bool pigeon_alive = false;
+
         //public thread.Thread threadPigeon;
         public thread.Thread threadPigeon1;
         public thread.Thread threadPigeon2;
+        public thread.Thread threadPigeon3;
 
         int widthEnv = 10;
         int heightEnv = 10;
@@ -60,13 +55,14 @@ namespace GraineDeChourbe
         // Créer les pigeons
         public void initialise()
         {
-
+            fearTime.Interval = 2000;
+            //fearTime.Tick += new EventHandler(timer_Tick);
             //// Test pour 1 pigeon
             //addPigeon(100, 70, 0, GraineDeChourbe.Properties.Resources.pigeon_1);
             //addPigeon(200, 100, 0, GraineDeChourbe.Properties.Resources.pigeon_2);
             //pigeons[0].set_belief(graines);
 
-            for (int i = 1; i < 3; i++)
+            for (int i = 1; i < 4; i++)
             {
                 addPigeon(i * 100, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
                 pigeons[i - 1].set_belief(graines);
@@ -75,7 +71,8 @@ namespace GraineDeChourbe
             // Lancement d'un thread pour un pigeon
             // foreach (var pigeon in pigeons)
             // Initialisation des pigeons
-            threadPigeon1 = new thread.Thread(() => {
+            threadPigeon1 = new thread.Thread(() =>
+            {
                 run(pigeons[0]);
             });
             threadPigeon1.Name = "pigeon 1";
@@ -87,29 +84,29 @@ namespace GraineDeChourbe
 
             threadPigeon2.Name = "pigeon 2";
 
-            //threadPigeon.Start();
+            threadPigeon3 = new thread.Thread(() =>
+            {
+                run(pigeons[2]);
+            });
 
-
-            // Lancement d'un thread pour un pigeon
-            //foreach(var pigeon in pigeons)
-            //{
-            //    thread.Thread threadPigeon1 = new thread.Thread(()=> {
-            //        run(pigeon);
-            //    });
-            //    threadPigeon.Start();
-            //}
-            //threadPigeon = new thread.Thread(new thread.ThreadStart(run));
-            //threadPigeon.Start();
+            threadPigeon3.Name = "pigeon 3";
         }
-
-        // Dessiner l'environnement initiale
+        //void timer_Tick(object sender, EventArgs e)
+        //{
+        //    Console.WriteLine("Fin du random");
+        //    Console.WriteLine(fearTime.Enabled);
+        //    fearTime.Stop();
+        //    fearTime.Enabled = false;
+        //    //Console.WriteLine("After stop");
+        //    //Console.WriteLine(fearTime.Enabled);
+        //}
 
         // Ajout de graines dans l'environnement
         public void addSeed(int newX, int newY)
         {
             lastSeedIndex = +1;
 
-            Graine newSeed = new Graine(newX, newY, false,lastSeedIndex);
+            Graine newSeed = new Graine(newX, newY, false, lastSeedIndex);
             graines.Add(newSeed);
         }
 
@@ -121,52 +118,22 @@ namespace GraineDeChourbe
             pigeons.Add(newPigeon);
         }
 
-        // Run environment
-        // fais vivre les pigeons
-        // Fais apparaitre des graines
-        //public void run(Pigeon pigeon)
-        //{
-        //    while (pigeon_alive) {
-
-        //        thread.Thread.Sleep(50);
-        //        for (int i = 0; i < 5; i++)
-        //        {
-        //            pigeons[i].set_belief(graines);
-        //            string pigeon_status = "sleep";
-        //            if (graines.Count > 0)
-        //            {
-        //                pigeon_status = "food";
-        //            }
-
-        //            (int, int) pos_seed_eat = pigeons[i].run(pigeon_status, 3);
-
-        //            // Should send coordinate
-        //            if (pos_seed_eat == (-1, -1))
-        //            {
-        //                continue;
-        //            }
-        //            else
-        //            {
-        //                //Console.WriteLine("pos_seed_eat : " + pos_seed_eat.Item1 + " " + pos_seed_eat.Item2);
-        //                CriticalZone(pos_seed_eat.Item1, pos_seed_eat.Item2);
-        //            }
-        //        }
-        //    }
-        //}
-
         public void run(Pigeon pigeon)
         {
             while (pigeon_alive)
             {
-
                 thread.Thread.Sleep(50);
                 pigeon.set_belief(graines);
                 string pigeon_status = "sleep";
+                Console.WriteLine("Thread : " + thread.Thread.CurrentThread.Name + " feared " + fearedPigeon);
                 if (graines.Count > 0)
                 {
                     pigeon_status = "food";
                 }
-
+                else if (fearedPigeon)
+                {
+                    pigeon_status = "random";
+                }
                 (int, int) pos_seed_eat = pigeon.run(pigeon_status, 3);
 
                 // Should send coordinate
@@ -185,6 +152,20 @@ namespace GraineDeChourbe
         public void stopPigeon()
         {
             //pigeon_is_here = false;
+        }
+
+        public String randomPigeonMove()
+        {
+            Random random = new Random();
+            int num = random.Next(100);
+
+            String move = "sleep";
+            if (num > 80)
+            {
+                move = "random";
+            }
+            Console.WriteLine("move : " + move);
+            return move;
         }
 
         // On supprime la graine qui a été mangée
@@ -208,14 +189,8 @@ namespace GraineDeChourbe
                     }
 
                     // 2ème version handler avec arguments
-                    UpdateEventArgs args = new UpdateEventArgs(seedX,seedY);
+                    UpdateEventArgs args = new UpdateEventArgs(seedX, seedY);
                     UpdateEventHandler?.Invoke(this, args);
-
-                    //if (SettingsSaved != null)
-                    //{
-                    //    SettingsSavedEventArgs ss = new SettingsSavedEventArgs() { DeviceIndex = Tuple.Create(seedX,seedY) };
-                    //    SettingsSaved(this, ss);
-                    //}
                 }
             }
         }
@@ -239,12 +214,16 @@ namespace GraineDeChourbe
             }
 
         }
-    }
 
-    // TEST
-    //public class SettingsSavedEventArgs : EventArgs
-    //{
-    //    public Tuple<int,int> DeviceIndex { get; set; }
-    //    // Other settings could be added here
-    //}
+        public class UpdateEventArgs : EventArgs
+        {
+            public int x;
+            public int y;
+            public UpdateEventArgs(int new_x, int new_y)
+            {
+                x = new_x;
+                y = new_y;
+            }
+        }
+    }
 }
