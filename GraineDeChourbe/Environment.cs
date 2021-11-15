@@ -17,6 +17,9 @@ namespace GraineDeChourbe
         // Création du Mutex
         private static Mutex mutex = new Mutex();
 
+        // Liste de thread
+
+
         public EventHandler udpateSeeds;
 
         public delegate void SettingsSavedEventHandler(object sender, SettingsSavedEventArgs e);
@@ -27,7 +30,9 @@ namespace GraineDeChourbe
 
 
         public bool pigeon_alive = false;
-        public thread.Thread threadPigeon;
+        //public thread.Thread threadPigeon;
+        public thread.Thread threadPigeon1;
+        public thread.Thread threadPigeon2;
 
         int widthEnv = 10;
         int heightEnv = 10;
@@ -47,11 +52,27 @@ namespace GraineDeChourbe
             //    pigeons[i - 1].set_belief(graines);
             //}
 
-            // Lancement d'un thread pour un pigeon
-            foreach(var pigeon in pigeons)
+            // Initialisation des pigeons
+            threadPigeon1 = new thread.Thread(() => {
+                run(pigeons[0]);
+            });
+
+            threadPigeon2 = new thread.Thread(() =>
             {
-                threadPigeon = new thread.Thread(new thread.ThreadStart(run));
-            }
+                run(pigeons[1]);
+            });
+
+            //threadPigeon.Start();
+
+
+            // Lancement d'un thread pour un pigeon
+            //foreach(var pigeon in pigeons)
+            //{
+            //    thread.Thread threadPigeon1 = new thread.Thread(()=> {
+            //        run(pigeon);
+            //    });
+            //    threadPigeon.Start();
+            //}
             //threadPigeon = new thread.Thread(new thread.ThreadStart(run));
             //threadPigeon.Start();
         }
@@ -76,12 +97,12 @@ namespace GraineDeChourbe
         // Run environment
         // fais vivre les pigeons
         // Fais apparaitre des graines
-        public void run()
+        public void run(Pigeon pigeon)
         {
             while (pigeon_alive) {
                 // Test pour 1 seul pigeon
-                pigeons[0].set_belief(graines);
-                (int, int) pos_seed_eat = pigeons[0].run("food", 3);
+                pigeon.set_belief(graines);
+                (int, int) pos_seed_eat = pigeon.run("food", 3);
                 // Should send coordinate
                 if (pos_seed_eat == (-1, -1))
                 {
