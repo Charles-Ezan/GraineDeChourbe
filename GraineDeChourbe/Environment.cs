@@ -29,6 +29,11 @@ namespace GraineDeChourbe
         public List<Graine> graines = new List<Graine>();
 
 
+        // Index de la dernière graine ajoutée
+        public int lastSeedIndex = 0;
+        public int deletedSeedIndex = 0;
+
+
         public bool pigeon_alive = false;
         //public thread.Thread threadPigeon;
         public thread.Thread threadPigeon1;
@@ -82,7 +87,9 @@ namespace GraineDeChourbe
         // Ajout de graines dans l'environnement
         public void addSeed(int newX, int newY)
         {
-            Graine newSeed = new Graine(newX, newY, false);
+            lastSeedIndex = +1;
+
+            Graine newSeed = new Graine(newX, newY, false,lastSeedIndex);
             graines.Add(newSeed);
         }
 
@@ -101,6 +108,7 @@ namespace GraineDeChourbe
         {
             while (pigeon_alive) {
                 // Test pour 1 seul pigeon
+                //Console.WriteLine("Pigeon Position : " + pigeon.get_pos());
                 pigeon.set_belief(graines);
                 (int, int) pos_seed_eat = pigeon.run("food", 3);
                 // Should send coordinate
@@ -114,7 +122,7 @@ namespace GraineDeChourbe
                     CriticalZone(pos_seed_eat.Item1, pos_seed_eat.Item2);
                     //deleteSeed(pos_seed_eat.Item1, pos_seed_eat.Item2);
                 }
-                thread.Thread.Sleep(50);
+                thread.Thread.Sleep(300);
 
                 // Destroy from the list the seed
                 // ISSUE IN SEEDS
@@ -144,7 +152,11 @@ namespace GraineDeChourbe
             {
                 if ((graines[i].get_xpos() == seedX) && (graines[i].get_ypos() == seedY))
                 {
+                    Console.WriteLine("GRAINE SUPPRIME");
+                    Console.WriteLine("graine list count before : " + graines.Count);
+                    deletedSeedIndex = graines[i].get_index();
                     graines.RemoveAt(i);
+                    Console.WriteLine("graine list count After : " + graines.Count);
                     if (udpateSeeds != null)
                     {
                         udpateSeeds(this, null);

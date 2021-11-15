@@ -118,7 +118,7 @@ namespace GraineDeChourbe
         {
             while (refreshDisplay) {
                 move_item();
-                thread.Thread.Sleep(50);
+                thread.Thread.Sleep(500);
             }
             // Suppresion des graines manger
         }
@@ -204,55 +204,121 @@ namespace GraineDeChourbe
             //            seedsImg[j].Dispose();
             //    }
             //}
-            //deleteFromIndex();
+            deleteFromIndex();
         }
+        //public void deleteFromIndex()
+        //{
+        //    //MessageBox.Show("Message receive");
+        //    List<Graine> seeds = environment.graines;
+
+        //    for (int i = 0; i < seeds.Count; i++)
+        //    {
+        //        for (int j = 0; j < seedsImg.Count; j++)
+        //        {
+        //            //if(seedsImg[j].Visible == false)
+        //            //{
+        //            //    continue;
+        //            //}
+        //            //Console.WriteLine("seedsImg[j] -> X : " + seedsImg[j].Location.X + " Y : " + seedsImg[j].Location.Y);
+        //            //Console.WriteLine("seeds[i] -> X : " + seeds[i].get_xpos() + " Y : " + seeds[i].get_ypos());
+        //            if (((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())))
+        //            {
+        //                continue;
+        //            }
+
+        //            seedsImg[j].Hide();
+        //            if (seedsImg[j].InvokeRequired)
+        //            {
+        //                SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
+        //                pigeonsAndImg[j].Item2.Invoke(s, new object[] { });
+        //            }
+        //            else {
+        //                seedsImg[j].Visible = false;
+        //            }
+        //            return;
+        //        }
+        //    }
+        //}
+
         public void deleteFromIndex()
         {
+            //int lastSeedIndex = environment.deletedSeedIndex;
+            //int indexToHide = lastSeedIndex - 1;
+            ////seedsImg[indexToHide].Hide();
+
+            //if (seedsImg[indexToHide].InvokeRequired)
+            //{
+            //    SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
+            //    seedsImg[indexToHide].Invoke(s, new object[] { });
+            //}
+            //else
+            //{
+            //    //seedsImg[indexToHide].Hide();
+            //    seedsImg[indexToHide].Dispose();
+            //    //seedsImg[indexToHide].Visible = false;
+            //}
+
             //MessageBox.Show("Message receive");
             List<Graine> seeds = environment.graines;
-            for (int i = 0; i < seeds.Count; i++)
+            Console.WriteLine("11");
+            for (int i = 0; i < seedsImg.Count; i++)
             {
-                for (int j = 0; j < seedsImg.Count; j++)
-                {
-                    if(seedsImg[j].Visible == false)
-                    {
-                        continue;
-                    }
-                    Console.WriteLine("seedsImg[j] -> X : " + seedsImg[j].Location.X + " Y : " + seedsImg[j].Location.Y);
-                    Console.WriteLine("seeds[i] -> X : " + seeds[i].get_xpos() + " Y : " + seeds[i].get_ypos());
-                    if (((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())))
-                    {
-                        continue;
-                    }
-                    if (seedsImg[j].InvokeRequired)
+                if(seeds.Count == 0) {
+                    if (seedsImg[i].InvokeRequired)
                     {
                         SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
-                        pigeonsAndImg[j].Item2.Invoke(s, new object[] { });
+                        seedsImg[i].Invoke(s, new object[] { });
                     }
-                    else {
-                        seedsImg[j].Visible = false;
-                        Console.WriteLine("seedsImg : " + seedsImg.Count);
-                        Console.WriteLine("j : " + j);
-                        Console.WriteLine("i : " + i);
+                    else
+                    {
+                        Console.WriteLine("HIDE : " + i);
+                        seedsImg[i].Hide();
+                    }
+                }
+                Console.WriteLine("22");
+                for (int j = 0; j < seeds.Count; j++)
+                {
+                    //if(seedsImg[j].Visible == false)
+                    //{
+                    //    continue;
+                    //}
+                    //Console.WriteLine("seedsImg[j] -> X : " + seedsImg[j].Location.X + " Y : " + seedsImg[j].Location.Y);
+                    //Console.WriteLine("seeds[i] -> X : " + seeds[i].get_xpos() + " Y : " + seeds[i].get_ypos());
+                    if (((seedsImg[i].Location.X == seeds[j].get_xpos()) && ((seedsImg[i].Location.Y == seeds[j].get_ypos()))))
+                    {
+                        continue;
+                    }
+
+                    
+                    if (seedsImg[i].InvokeRequired)
+                    {
+                        SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
+                        seedsImg[i].Invoke(s, new object[] { });
+                    }
+                    else
+                    {
+                        Console.WriteLine("HIDE : " + i);
+                        seedsImg[i].Hide();
+                        //seedsImg[j].Visible = false;
                     }
                     return;
                 }
             }
         }
 
-            //if (pigeonsAndImg[i].Item2.InvokeRequired)
-            //{
-            //    var d = new SafeCallDelegate(move_item);
-            //    pigeonsAndImg[i].Item2.Invoke(d, new object[] { });
-            //}
-            //else
-            //{
-            //    pigeonsAndImg[i].Item2.Location = new Point(pigeons[i].xpos, pigeons[i].ypos);
-            //    pigeonsAndImg[i].Item2.BringToFront();
-            //    pigeonsAndImg[i].Item2.BackColor = Color.Transparent;
-            //}
+        //if (pigeonsAndImg[i].Item2.InvokeRequired)
+        //{
+        //    var d = new SafeCallDelegate(move_item);
+        //    pigeonsAndImg[i].Item2.Invoke(d, new object[] { });
+        //}
+        //else
+        //{
+        //    pigeonsAndImg[i].Item2.Location = new Point(pigeons[i].xpos, pigeons[i].ypos);
+        //    pigeonsAndImg[i].Item2.BringToFront();
+        //    pigeonsAndImg[i].Item2.BackColor = Color.Transparent;
+        //}
 
-            private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
             environment.deleteSeed(20, 20);
         }

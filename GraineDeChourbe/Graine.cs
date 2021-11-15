@@ -11,12 +11,14 @@ namespace GraineDeChourbe
         private int xpos;
         private int ypos;
         private bool rotten;
+        private int index;
 
-        public Graine(int x, int y, bool isRotten)
+        public Graine(int x, int y, bool isRotten, int newIndex)
         {
             xpos = x;
             ypos = y;
             rotten = isRotten;
+            index = newIndex;
         }
 
         public int get_xpos()
@@ -33,5 +35,7 @@ namespace GraineDeChourbe
         {
             return (xpos, ypos);
         }
+
+        public int get_index() { return index; }
     }
 }
