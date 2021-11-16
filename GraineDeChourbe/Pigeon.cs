@@ -198,7 +198,7 @@ namespace GraineDeChourbe
         public void move_to_food()
         {
             Random random_speed = new Random();
-            set_speed(random_speed.Next(1, 10));
+            set_speed(random_speed.Next(1, 2));
 
             (int, int) food_direction = (get_desire().Item1 - get_pos().Item1,  (get_desire().Item2 - get_pos().Item2));
             set_direction(food_direction);

@@ -29,11 +29,6 @@ namespace GraineDeChourbe
         public event UpdateDelegate ReplaceSeedEvent;
 
 
-
-
-        //public delegate void SettingsSavedEventHandler(object sender, SettingsSavedEventArgs e);
-        //public event SettingsSavedEventHandler SettingsSaved;
-
         public List<Pigeon> pigeons = new List<Pigeon>();
         public List<Graine> graines = new List<Graine>();
 
@@ -57,21 +52,13 @@ namespace GraineDeChourbe
         public void initialise()
         {
             fearTime.Interval = 2000;
-            //fearTime.Tick += new EventHandler(timer_Tick);
-            //// Test pour 1 pigeon
-            //addPigeon(100, 70, 0, GraineDeChourbe.Properties.Resources.pigeon_1);
-            //addPigeon(200, 100, 0, GraineDeChourbe.Properties.Resources.pigeon_2);
-            //pigeons[0].set_belief(graines);
 
             for (int i = 1; i < 4; i++)
             {
-                addPigeon(i * 100, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
+                addPigeon(i * 150, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
                 pigeons[i - 1].set_belief(graines);
             }
 
-            // Lancement d'un thread pour un pigeon
-            // foreach (var pigeon in pigeons)
-            // Initialisation des pigeons
             threadPigeon1 = new thread.Thread(() =>
             {
                 run(pigeons[0]);
@@ -92,15 +79,6 @@ namespace GraineDeChourbe
 
             threadPigeon3.Name = "pigeon 3";
         }
-        //void timer_Tick(object sender, EventArgs e)
-        //{
-        //    Console.WriteLine("Fin du random");
-        //    Console.WriteLine(fearTime.Enabled);
-        //    fearTime.Stop();
-        //    fearTime.Enabled = false;
-        //    //Console.WriteLine("After stop");
-        //    //Console.WriteLine(fearTime.Enabled);
-        //}
 
         // Ajout de graines dans l'environnement
         public void addSeed(int newX, int newY)
@@ -129,16 +107,18 @@ namespace GraineDeChourbe
                     { 
                         graines[i].update_seed_expiration(); 
                     }
-                    else if (graines[i].get_status() == true)
+                    if (graines[i].get_status() == true && graines[i].get_rotten_img() == false)
                     {
+                        graines[i].update_seed_expiration();
                         UpdateEventArgs args = new UpdateEventArgs(graines[i].get_xpos(), graines[i].get_ypos());
                         ReplaceSeedEvent.Invoke(this, args);
+                        graines[i].set_rotten_img(true);
                     }
                 }
                 thread.Thread.Sleep(50);
+                removeRottenSeeds();
                 pigeon.set_belief(graines);
                 string pigeon_status = "sleep";
-                Console.WriteLine("Thread : " + thread.Thread.CurrentThread.Name + " feared " + fearedPigeon);
                 if (graines.Count > 0)
                 {
                     pigeon_status = "food";
@@ -167,6 +147,19 @@ namespace GraineDeChourbe
             //pigeon_is_here = false;
         }
 
+        public void removeRottenSeeds()
+        {
+            if (graines.Count > 0)
+            {
+                for (int i = 0; i < graines.Count-1; i++)
+                {
+                    if (graines[i].get_status() == true)
+                    {
+                        graines.Remove(graines[i]);
+                    }
+                }
+            }
+        }
         public String randomPigeonMove()
         {
             Random random = new Random();
@@ -177,25 +170,18 @@ namespace GraineDeChourbe
             {
                 move = "random";
             }
-            Console.WriteLine("move : " + move);
             return move;
         }
 
         // On supprime la graine qui a été mangée
         public void deleteSeed(int seedX, int seedY)
         {
-
-            //if (udpateSeeds != null)
-            //    udpateSeeds(this, null); 
             for (int i = 0; i < graines.Count; i++)
             {
                 if ((graines[i].get_xpos() == seedX) && (graines[i].get_ypos() == seedY))
                 {
-                    Console.WriteLine("GRAINE SUPPRIME");
-                    Console.WriteLine("graine list count before : " + graines.Count);
                     deletedSeedIndex = graines[i].get_index();
                     graines.RemoveAt(i);
-                    Console.WriteLine("graine list count After : " + graines.Count);
                     if (udpateSeeds != null)
                     {
                         udpateSeeds(this, null);
@@ -210,18 +196,14 @@ namespace GraineDeChourbe
 
         void CriticalZone(int seedX, int seedY)
         {
-            Console.WriteLine(thread.Thread.CurrentThread.Name + "Pigeon want to eat");
-            Console.WriteLine("Pigeon want to eat");
             try
             {
                 // On attend avant d'accéder à la liste de graines que celle-ci soit libre
                 mutex.WaitOne();
                 deleteSeed(seedX, seedY);
-                Console.WriteLine(thread.Thread.CurrentThread.Name + "as completed is task");
             }
             finally
             {
-                Console.WriteLine(thread.Thread.CurrentThread.Name + "free");
                 // Libère la liste de graines de tel sorte à ce que les pigeons puissent y accéder
                 mutex.ReleaseMutex();
             }

@@ -37,7 +37,7 @@ namespace GraineDeChourbe
             // 
             // launch
             // 
-            this.launch.Location = new System.Drawing.Point(664, 47);
+            this.launch.Location = new System.Drawing.Point(713, 12);
             this.launch.Name = "launch";
             this.launch.Size = new System.Drawing.Size(75, 23);
             this.launch.TabIndex = 0;
@@ -47,7 +47,7 @@ namespace GraineDeChourbe
             // 
             // pause
             // 
-            this.pause.Location = new System.Drawing.Point(664, 105);
+            this.pause.Location = new System.Drawing.Point(713, 41);
             this.pause.Name = "pause";
             this.pause.Size = new System.Drawing.Size(75, 23);
             this.pause.TabIndex = 2;
