@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
 using System.Diagnostics;
 using thread = System.Threading;
 using Mutex = System.Threading.Mutex;
@@ -20,7 +19,8 @@ namespace GraineDeChourbe
         // Feared pigeon when there is no seed on map
         public bool fearedPigeon = false;
 
-        // Handler
+        // Handler pour avertir la class form d'un changement dans la class environment et ainsi mettre
+        // à jour le visuel
         public EventHandler udpateSeeds;
 
         public delegate void UpdateDelegate(object sender, UpdateEventArgs args);
@@ -39,12 +39,12 @@ namespace GraineDeChourbe
 
         public bool pigeon_alive = false;
         public Random random_number = new Random();
-        //public thread.Thread threadPigeon;
+
         public thread.Thread threadPigeon1;
         public thread.Thread threadPigeon2;
         public thread.Thread threadPigeon3;
 
-        // Créer les pigeons
+        // Créer les pigeons et initialisation des threads relatifs
         public void initialise()
         {
             for (int i = 1; i < 4; i++)
@@ -173,7 +173,7 @@ namespace GraineDeChourbe
                         udpateSeeds(this, null);
                     }
 
-                    // 2ème version handler avec arguments
+                    // handler avec arguments
                     UpdateEventArgs args = new UpdateEventArgs(seedX, seedY);
                     UpdateEventHandler?.Invoke(this, args);
                 }
@@ -196,6 +196,8 @@ namespace GraineDeChourbe
 
         }
 
+        // Classe permettant de passer des données lorsque l'on notifie la class form d'un changement dans 
+        // la classe environment
         public class UpdateEventArgs : EventArgs
         {
             public int x;

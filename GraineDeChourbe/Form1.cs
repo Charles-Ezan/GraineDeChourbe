@@ -28,7 +28,6 @@ namespace GraineDeChourbe
         // Thread pour le refresh
         thread.Thread threadRefresh;
 
-        //Pigeon environment = new Pigeon();
         Environment environment = new Environment();
 
         bool refreshDisplay = false;
@@ -53,6 +52,7 @@ namespace GraineDeChourbe
         {
         }
 
+        // Lancement de l'application
         private void launch_Click(object sender, EventArgs e)
         {
             graph = this.CreateGraphics();
@@ -100,6 +100,8 @@ namespace GraineDeChourbe
             }
         }
 
+        // Fonction de refresh de la form afin que le spectateur puisse voir les changements d'états 
+        // (Déplacement des pigeons...)
         private void refresh()
         {
             while (refreshDisplay)
@@ -107,14 +109,10 @@ namespace GraineDeChourbe
                 move_item();
                 thread.Thread.Sleep(50);
             }
-            // Suppresion des graines manger
         }
 
-        public void remove_Seed()
-        {
-            MessageBox.Show("REMOVED SEED");
-        }
 
+        // Déplace les pigeons
         private void move_item()
         {
             List<Pigeon> pigeons = environment.pigeons;
@@ -133,11 +131,6 @@ namespace GraineDeChourbe
                     pigeonsAndImg[i].Item2.BackColor = Color.Transparent;
                 }
             }
-        }
-
-        private void pause_Click(object sender, EventArgs e)
-        {
-            refreshDisplay = false;
         }
 
         // Création d'une graine lors de l'appui 
@@ -166,7 +159,6 @@ namespace GraineDeChourbe
                 var newSeedX = seedX - a_seed.Size.Width / 2;
                 var newSeedY = seedY - a_seed.Size.Width / 2;
                 a_seed.Location = new Point(newSeedX, newSeedY);
-                //a_seed.Location = new Point(seedX - a_seed.Size.Width/2, seedY - a_seed.Size.Height / 2);
 
                 this.Controls.Add(a_seed);
                 a_seed.BringToFront();
@@ -183,20 +175,21 @@ namespace GraineDeChourbe
             }
         }
 
+        // Suppression de l'image de la graine
         private void deleteSeedImg(object sender, Environment.UpdateEventArgs e)
         {
-
-            //MessageBox.Show("Message receive : " + e.y);
             seedToBeDelete = Tuple.Create(e.x, e.y);
             deleteFromIndex();
         }
 
+        // Fonction de remplacement de l'image de la graine
         private void rottenSeedImg(object sender, Environment.UpdateEventArgs e)
         {
             seedToBeReplace = Tuple.Create(e.x, e.y);
             replaceFromIndex();
         }
 
+        // Changement de l'image d'une seed lorsque celle-ci est périmée
         public void replaceFromIndex()
         {
             for (int i = 0; i < seedsImg.Count; i++)
@@ -214,12 +207,11 @@ namespace GraineDeChourbe
             }
         }
 
-
+        // Suppression d'une graine à partir de son index
         public void deleteFromIndex()
         {
             for (int i = 0; i < seedsImg.Count; i++)
             {
-                //if (((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())))
                 if ((seedsImg[i].Location.X == seedToBeDelete.Item1) && (seedsImg[i].Location.Y == seedToBeDelete.Item2))
                     if (seedsImg[i].InvokeRequired)
                     {
