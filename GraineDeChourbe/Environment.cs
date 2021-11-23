@@ -123,30 +123,33 @@ namespace GraineDeChourbe
         {
             while (pigeon_alive)
             {
-                for (int i = 0; i < graines.Count; i++)
-                {
-                    if (graines[i].get_status() == false)
-                    { 
-                        graines[i].update_seed_expiration(); 
-                    }
-                    else if (graines[i].get_status() == true)
-                    {
-                        UpdateEventArgs args = new UpdateEventArgs(graines[i].get_xpos(), graines[i].get_ypos());
-                        ReplaceSeedEvent.Invoke(this, args);
-                    }
-                }
+                //for (int i = 0; i < graines.Count; i++)
+                //{
+                //    if (graines[i].get_status() == false)
+                //    {
+                //        graines[i].update_seed_expiration();
+                //    }
+                //    else if (graines[i].get_status() == true)
+                //    {
+                //        UpdateEventArgs args = new UpdateEventArgs(graines[i].get_xpos(), graines[i].get_ypos());
+                //        ReplaceSeedEvent.Invoke(this, args);
+                //    }
+                //}
                 thread.Thread.Sleep(50);
                 pigeon.set_belief(graines);
                 string pigeon_status = "sleep";
-                Console.WriteLine("Thread : " + thread.Thread.CurrentThread.Name + " feared " + fearedPigeon);
-                if (graines.Count > 0)
-                {
-                    pigeon_status = "food";
-                }
-                else if (fearedPigeon)
+                //Console.WriteLine("Thread : " + thread.Thread.CurrentThread.Name + " feared " + fearedPigeon);
+
+                if (fearedPigeon)
                 {
                     pigeon_status = "random";
                 }
+
+                else if (graines.Count > 0)
+                {
+                    pigeon_status = "food";
+                }
+                
                 (int, int) pos_seed_eat = pigeon.run(pigeon_status, 3);
 
                 // Should send coordinate
@@ -210,18 +213,18 @@ namespace GraineDeChourbe
 
         void CriticalZone(int seedX, int seedY)
         {
-            Console.WriteLine(thread.Thread.CurrentThread.Name + "Pigeon want to eat");
-            Console.WriteLine("Pigeon want to eat");
+            //Console.WriteLine(thread.Thread.CurrentThread.Name + "Pigeon want to eat");
+            //Console.WriteLine("Pigeon want to eat");
             try
             {
                 // On attend avant d'accéder à la liste de graines que celle-ci soit libre
                 mutex.WaitOne();
                 deleteSeed(seedX, seedY);
-                Console.WriteLine(thread.Thread.CurrentThread.Name + "as completed is task");
+                //Console.WriteLine(thread.Thread.CurrentThread.Name + "as completed is task");
             }
             finally
             {
-                Console.WriteLine(thread.Thread.CurrentThread.Name + "free");
+                //Console.WriteLine(thread.Thread.CurrentThread.Name + "free");
                 // Libère la liste de graines de tel sorte à ce que les pigeons puissent y accéder
                 mutex.ReleaseMutex();
             }

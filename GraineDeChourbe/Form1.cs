@@ -193,7 +193,6 @@ namespace GraineDeChourbe
             {
                 fear = true;
             }
-            environment.fearedPigeon = true;
             Console.WriteLine("move : " + fear);
             if(!fear) { 
 
