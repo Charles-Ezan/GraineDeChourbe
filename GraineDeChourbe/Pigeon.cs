@@ -178,6 +178,7 @@ namespace GraineDeChourbe
             set_desire(neerest_seed);
         }
 
+        // Allows the pigeon's desire to be fixed on the nearest seed
         public void find_freshest_seed()
         {
             List<Graine> seeds = get_belief();
@@ -187,7 +188,7 @@ namespace GraineDeChourbe
                 {
                     set_desire(seeds[i].get_pos());
                 }
-                else if(seeds.Count == 1)
+                else if(seeds.Count == 1 || seeds[i].get_rotten_img() == true)
                 {
                     set_desire(get_pos());
                 }
@@ -198,7 +199,6 @@ namespace GraineDeChourbe
         public void move_to_food()
         {
             Random random_speed = new Random();
-            set_speed(random_speed.Next(1, 2));
 
             (int, int) food_direction = (get_desire().Item1 - get_pos().Item1,  (get_desire().Item2 - get_pos().Item2));
             set_direction(food_direction);
@@ -214,6 +214,7 @@ namespace GraineDeChourbe
             set_direction(random_direction);
         }
 
+        // Returns the distance between the pigeon and the seed
         public double distance_seed_calculation(Graine seed)
         {
             double distance = Math.Sqrt(Math.Pow(seed.get_xpos() - get_xpos(), 2) + Math.Pow(seed.get_ypos() - get_ypos(), 2));
@@ -243,14 +244,16 @@ namespace GraineDeChourbe
                 distance_ratio = 1;
             }
 
-            // calculation of the travel vector
-            if((get_belief().Count < 1) && (new_state == "food"))
+            // If there are no seeds on the window, the pigeon will not move
+            if ((get_belief().Count < 1) && (new_state == "food"))
             {
                 return get_pos();
             }
 
+            // Corresponds to the direction vector of the pigeon
             (double, double) travel_vector = ((get_direction().Item1 / distance_ratio),
                get_direction().Item2 / distance_ratio);
+
             if(distance_target == 0)
             {
                 (int, int) new_position = get_pos();
@@ -264,6 +267,7 @@ namespace GraineDeChourbe
 
         }
 
+        // Returns the position of the seed eaten by the pigeon
         public (int, int) eat()
         {
             (int, int) pos_seed_eat = (-1, -1);

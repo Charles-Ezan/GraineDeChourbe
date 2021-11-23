@@ -17,8 +17,7 @@ namespace GraineDeChourbe
         // Création du Mutex
         private static Mutex mutex = new Mutex();
 
-        // Timed feared pigeon when there is no seed on map
-        System.Windows.Forms.Timer fearTime = new System.Windows.Forms.Timer();
+        // Feared pigeon when there is no seed on map
         public bool fearedPigeon = false;
 
         // Handler
@@ -39,20 +38,15 @@ namespace GraineDeChourbe
 
 
         public bool pigeon_alive = false;
-
+        public Random random_number = new Random();
         //public thread.Thread threadPigeon;
         public thread.Thread threadPigeon1;
         public thread.Thread threadPigeon2;
         public thread.Thread threadPigeon3;
 
-        int widthEnv = 10;
-        int heightEnv = 10;
-
         // Créer les pigeons
         public void initialise()
         {
-            fearTime.Interval = 2000;
-
             for (int i = 1; i < 4; i++)
             {
                 addPigeon(i * 150, 70, i, GraineDeChourbe.Properties.Resources.pigeon_1);
@@ -89,10 +83,10 @@ namespace GraineDeChourbe
             graines.Add(newSeed);
         }
 
-        // Ajout de graines dans l'environnement
-        public void addPigeon(int newX, int newY, int newIndex, Image newImg)
+        // Ajout de pigeons dans l'environnement
+        public void addPigeon(int newX, int newY, int newIndex, Bitmap newImg)
         {
-
+            newImg.MakeTransparent(newImg.GetPixel(0, 0));
             Pigeon newPigeon = new Pigeon(newX, newY, newIndex, newImg);
             pigeons.Add(newPigeon);
         }
@@ -101,7 +95,7 @@ namespace GraineDeChourbe
         {
             while (pigeon_alive)
             {
-                for (int i = 0; i < graines.Count; i++)
+                for (int i = 0; i < graines.Count-1; i++)
                 {
                     if (graines[i].get_status() == false)
                     { 
@@ -115,18 +109,23 @@ namespace GraineDeChourbe
                         graines[i].set_rotten_img(true);
                     }
                 }
+
                 thread.Thread.Sleep(50);
-                removeRottenSeeds();
+
                 pigeon.set_belief(graines);
+                // Applies the status of the pigeon
                 string pigeon_status = "sleep";
-                if (graines.Count > 0)
-                {
-                    pigeon_status = "food";
-                }
-                else if (fearedPigeon)
+
+                if (fearedPigeon)
                 {
                     pigeon_status = "random";
                 }
+                else if (graines.Count > 0)
+                {
+                    pigeon_status = "food";
+                }
+
+                pigeon.set_speed(random_number.Next(1, 10));
                 (int, int) pos_seed_eat = pigeon.run(pigeon_status, 3);
 
                 // Should send coordinate
@@ -147,19 +146,6 @@ namespace GraineDeChourbe
             //pigeon_is_here = false;
         }
 
-        public void removeRottenSeeds()
-        {
-            if (graines.Count > 0)
-            {
-                for (int i = 0; i < graines.Count-1; i++)
-                {
-                    if (graines[i].get_status() == true)
-                    {
-                        graines.Remove(graines[i]);
-                    }
-                }
-            }
-        }
         public String randomPigeonMove()
         {
             Random random = new Random();

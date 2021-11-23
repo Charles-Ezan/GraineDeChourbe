@@ -147,11 +147,10 @@ namespace GraineDeChourbe
             int num = random.Next(100);
 
             bool fear = false;
-            if (num > 80)
+            if (num > 75)
             {
                 fear = true;
             }
-            environment.fearedPigeon = true;
             if (!fear)
             {
 
