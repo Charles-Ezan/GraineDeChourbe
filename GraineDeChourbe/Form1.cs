@@ -16,7 +16,6 @@ namespace GraineDeChourbe
 {
     public partial class Form1 : Form
     {
-
         private delegate void SafeCallDelegate();
         private delegate void SafeCallDelegate2();
         public delegate void MyEventHandler();
@@ -24,15 +23,10 @@ namespace GraineDeChourbe
         private Tuple<int, int> seedToBeDelete;
         private Tuple<int, int> seedToBeReplace;
 
-
-
-        //
-        public event MyEventHandler MyEvent;    
+        public event MyEventHandler MyEvent;
 
         // Thread pour le refresh
         thread.Thread threadRefresh;
-
-
 
         //Pigeon environment = new Pigeon();
         Environment environment = new Environment();
@@ -43,7 +37,6 @@ namespace GraineDeChourbe
         List<Tuple<int, PictureBox>> pigeonsAndImg = new List<Tuple<int, PictureBox>>();
         List<PictureBox> seedImg = new List<PictureBox>();
         // Liste des graines associés à une image
-        //List<Tuple<Tuple<int,int>, PictureBox>> seedsAndImg = new List<Tuple<Tuple<int,int>, PictureBox>>();
         List<PictureBox> seedsImg = new List<PictureBox>();
 
         // Graph
@@ -52,16 +45,8 @@ namespace GraineDeChourbe
         public Form1()
         {
             InitializeComponent();
-
-            //environment.udpateSeeds += deleteSeedImg;
             environment.UpdateEventHandler += deleteSeedImg;
             environment.ReplaceSeedEvent += rottenSeedImg;
-
-
-
-            // environment.udpateSeeds += new SettingsSavedEventHandler(SavedHandler);
-
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -70,22 +55,15 @@ namespace GraineDeChourbe
 
         private void launch_Click(object sender, EventArgs e)
         {
-
-
             graph = this.CreateGraphics();
             Pen BlackPen = new Pen(Color.Black, 3);
             graph.DrawRectangle(BlackPen, 1, 1, 700, 400);
 
             pictureBox1.SendToBack();//put it behinds
 
-
             // Création de la grille visuelle
-
-
             environment.initialise();
             List<Pigeon> pigeons = environment.pigeons;
-            Debug.WriteLine("Nombre de pigeons : " + pigeons.Count);
-
             for (int i = 0; i < pigeons.Count; i++)
             {
                 PictureBox a_pigeon = new PictureBox();
@@ -122,28 +100,10 @@ namespace GraineDeChourbe
             }
         }
 
-
-        //private void start_Click(object sender, EventArgs e)
-        //{
-        //    // Démarrage du thread de refresh
-        //    if (!threadRefresh.IsAlive)
-        //    {
-        //        refreshDisplay = true;
-        //        threadRefresh.Start();
-        //    }
-        //    // Démarrage du thread du pigeon
-        //    if (!environment.pigeon_alive)
-        //    {
-        //        environment.pigeon_alive = true;
-        //        environment.threadPigeon1.Start();
-        //        environment.threadPigeon2.Start();
-        //        environment.threadPigeon3.Start();
-        //    }
-        //}
-
         private void refresh()
         {
-            while (refreshDisplay) {
+            while (refreshDisplay)
+            {
                 move_item();
                 thread.Thread.Sleep(50);
             }
@@ -158,8 +118,6 @@ namespace GraineDeChourbe
         private void move_item()
         {
             List<Pigeon> pigeons = environment.pigeons;
-            
-            // Debug.WriteLine("Nombre de pigeons : " + pigeons.Count);
 
             for (int i = 0; i < pigeons.Count; i++)
             {
@@ -178,7 +136,7 @@ namespace GraineDeChourbe
         }
 
         private void pause_Click(object sender, EventArgs e)
-        {   
+        {
             refreshDisplay = false;
         }
 
@@ -189,12 +147,12 @@ namespace GraineDeChourbe
             int num = random.Next(100);
 
             bool fear = false;
-            if (num > 80)
+            if (num > 75)
             {
                 fear = true;
             }
-            Console.WriteLine("move : " + fear);
-            if(!fear) { 
+            if (!fear)
+            {
 
                 MouseEventArgs e1 = (MouseEventArgs)e;
 
@@ -225,16 +183,9 @@ namespace GraineDeChourbe
             }
         }
 
-        private void moveButton_Click(object sender, EventArgs e)
-        {
-            //environment.run();
-            // refresh();
-        }
-
-
         private void deleteSeedImg(object sender, Environment.UpdateEventArgs e)
         {
-            
+
             //MessageBox.Show("Message receive : " + e.y);
             seedToBeDelete = Tuple.Create(e.x, e.y);
             deleteFromIndex();
@@ -248,7 +199,7 @@ namespace GraineDeChourbe
 
         public void replaceFromIndex()
         {
-            for (int i=0; i<seedsImg.Count; i++)
+            for (int i = 0; i < seedsImg.Count; i++)
             {
                 if ((seedsImg[i].Location.X == seedToBeReplace.Item1) && (seedsImg[i].Location.Y == seedToBeReplace.Item2))
                     if (seedsImg[i].InvokeRequired)
@@ -258,7 +209,7 @@ namespace GraineDeChourbe
                     }
                     else
                     {
-                        seedsImg[i].Image=(Image)GraineDeChourbe.Properties.Resources.graines_rotten;
+                        seedsImg[i].Image = (Image)GraineDeChourbe.Properties.Resources.graines_rotten;
                     }
             }
         }
@@ -269,7 +220,7 @@ namespace GraineDeChourbe
             for (int i = 0; i < seedsImg.Count; i++)
             {
                 //if (((seedsImg[j].Location.X == seeds[i].get_xpos()) && (seedsImg[j].Location.Y == seeds[i].get_ypos())))
-                    if ((seedsImg[i].Location.X == seedToBeDelete.Item1) && (seedsImg[i].Location.Y == seedToBeDelete.Item2))
+                if ((seedsImg[i].Location.X == seedToBeDelete.Item1) && (seedsImg[i].Location.Y == seedToBeDelete.Item2))
                     if (seedsImg[i].InvokeRequired)
                     {
                         SafeCallDelegate2 s = new SafeCallDelegate2(deleteFromIndex);
@@ -279,13 +230,8 @@ namespace GraineDeChourbe
                     {
                         seedsImg[i].Dispose();
                     }
-                }
-               
-        }
+            }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            environment.deleteSeed(20, 20);
         }
     }
 }
